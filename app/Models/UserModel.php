@@ -11,7 +11,20 @@ class UserModel extends Model
     protected $primaryKey       = 'id';
 
     protected $allowedFields    = [
-        'username', 
-        'password'
+        'nom',
+        'email',
+        'password',
+        'genre',
+        'taille',
+        'poids',
+        'objectif',
+        'gold_option',
+        'portefeuille',
+        'created_at',
+        'updated_at'
     ];
+
+    protected $useTimestamps    = true;
+    protected $createdField     = 'created_at';
+    protected $updatedField     = 'updated_at';
 }
