@@ -61,7 +61,7 @@ CREATE TABLE sport(
 );
 
 CREATE TABLE regime(
-    id PRIMARY KEY AUTO_INCREMENT,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     viande FLOAT NOT NULL,
     poisson FLOAT NOT NULL,
     volaille FLOAT NOT NULL,
