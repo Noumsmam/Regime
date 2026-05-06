@@ -1,0 +1,10 @@
+CRITICAL - 2026-04-29 09:19:37 --> ErrorException: Undefined array key "nom"
+[Method: POST, Route: login]
+in APPPATH/Controllers/AuthController.php on line 22.
+ 1 APPPATH/Controllers/AuthController.php(22): CodeIgniter\Debug\Exceptions->errorHandler()
+ 2 SYSTEMPATH/CodeIgniter.php(951): App\Controllers\AuthController->login()
+ 3 SYSTEMPATH/CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController()
+ 4 SYSTEMPATH/CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest()
+ 5 SYSTEMPATH/Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+ 7 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb()
