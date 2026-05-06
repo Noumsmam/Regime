@@ -76,6 +76,16 @@ class Filters extends BaseFilters
         'before' => [
             // 'honeypot',
             'csrf',
+            // Appliquer le filtre d'authentification globalement, sauf pour les pages publiques
+            'auth' => ['except' => [
+                '/',
+                'login',
+                'login/*',
+                'register',
+                'register/*',
+                'assets/*',
+                'favicon.ico'
+            ]],
             // 'invalidchars',
         ],
         'after' => [
