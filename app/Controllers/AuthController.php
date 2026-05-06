@@ -112,8 +112,17 @@ class AuthController extends BaseController
             return redirect()->back()->with('error', 'Erreur lors de l\'inscription.');
         }
 
+        $genreRow = db_connect()->table('genre')->where('id', $genreId)->get()->getFirstRow('array');
+
         session()->remove('register_step1');
-        return redirect()->to('/')->with('success', 'Inscription réussie ! Connectez-vous.');
+        session()->set('user', [
+            'id' => $userId,
+            'nom' => $registerData['nom'],
+            'email' => $registerData['email'],
+            'genre' => $genreRow['libelle'] ?? null,
+        ]);
+
+        return redirect()->to('/dashboard')->with('success', 'Inscription réussie !');
     }
 
     /**
