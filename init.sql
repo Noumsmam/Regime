@@ -36,7 +36,7 @@ CREATE TABLE userObjectif(
 );
 
 CREATE TABLE porteMonnaie(
-    id INT PRIMARY KEY 
+    id INT PRIMARY KEY ,
     id_user INT NOT NULL UNIQUE,
     montant INT NOT NULL,
     FOREIGN KEY (id_user) REFERENCES users(id)
@@ -75,6 +75,6 @@ CREATE TABLE userRegime(
     id_sport INT NOT NULL,
     FOREIGN KEY (id_user) REFERENCES users(id),
     FOREIGN KEY (id_regime) REFERENCES regime(id),
-    FOREIGN KEY (id_sport) REFERENCES sport(id),
+    FOREIGN KEY (id_sport) REFERENCES sport(id)
 
 );
