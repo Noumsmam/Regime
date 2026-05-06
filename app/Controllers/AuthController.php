@@ -1,7 +1,6 @@
 <?php
 namespace App\Controllers;
 use App\Models\UserModel;
-use CodeIgniter\I18n\Time;
 
 class AuthController extends BaseController
 {
@@ -22,7 +21,7 @@ class AuthController extends BaseController
         
         $rules = [
             'nom' => 'required|min_length[2]|max_length[100]',
-            'email' => 'required|valid_email|is_unique[user.email]',
+            'email' => 'required|valid_email|is_unique[users.email]',
             'genre' => 'required|in_list[M,F,Autre]',
             'password' => 'required|min_length[6]',
             'password_confirm' => 'required|matches[password]',
@@ -74,24 +73,47 @@ class AuthController extends BaseController
             return redirect()->back()->withInput()->with('errors', $validation->getErrors());
         }
 
-        $model = new UserModel();
-        
-        $data = array_merge(
-            session()->get('register_step1'),
-            [
-                'taille' => $this->request->getPost('taille'),
-                'poids' => $this->request->getPost('poids'),
-                'gold_option' => 0,
-                'portefeuille' => 0,
-            ]
-        );
+        $db = db_connect();
+        $userModel = new UserModel();
+        $registerData = session()->get('register_step1');
 
-        if ($model->insert($data)) {
-            session()->remove('register_step1');
-            return redirect()->to('/')->with('success', 'Inscription réussie ! Connectez-vous.');
+        $genreRow = $db->table('genre')
+            ->where('libelle', $registerData['genre'])
+            ->get()
+            ->getFirstRow('array');
+
+        if (!$genreRow) {
+            $db->table('genre')->insert(['libelle' => $registerData['genre']]);
+            $genreId = $db->insertID();
+        } else {
+            $genreId = $genreRow['id'];
         }
 
-        return redirect()->back()->with('error', 'Erreur lors de l\'inscription.');
+        $db->transStart();
+
+        $userId = $userModel->insert([
+            'email' => $registerData['email'],
+            'username' => $registerData['nom'],
+            'password' => $registerData['password'],
+            'id_genre' => $genreId,
+        ], true);
+
+        if ($userId) {
+            $db->table('userInfo')->insert([
+                'id_user' => $userId,
+                'taille' => $this->request->getPost('taille'),
+                'poids' => $this->request->getPost('poids'),
+            ]);
+        }
+
+        $db->transComplete();
+
+        if ($db->transStatus() === false) {
+            return redirect()->back()->with('error', 'Erreur lors de l\'inscription.');
+        }
+
+        session()->remove('register_step1');
+        return redirect()->to('/')->with('success', 'Inscription réussie ! Connectez-vous.');
     }
 
     /**
@@ -127,12 +149,14 @@ class AuthController extends BaseController
             return redirect()->back()->with('error', 'Email ou mot de passe incorrect.');
         }
 
+        $genreRow = db_connect()->table('genre')->where('id', $user['id_genre'])->get()->getFirstRow('array');
+
         // Stocker les données non sensibles en session
         session()->set('user', [
             'id' => $user['id'],
-            'nom' => $user['nom'],
+            'nom' => $user['username'],
             'email' => $user['email'],
-            'genre' => $user['genre'],
+            'genre' => $genreRow['libelle'] ?? null,
         ]);
 
         return redirect()->to('/dashboard');

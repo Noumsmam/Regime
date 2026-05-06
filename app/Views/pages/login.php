@@ -48,6 +48,10 @@
 
     <input type="submit" value="se connecter">
     </form>
+
+    <div class="remember-row" style="margin-top:16px;justify-content:center;">
+      <a href="/register">S'inscrire</a>
+    </div>
   </div>
 </div>
 <?= $this->endSection() ?>
