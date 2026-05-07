@@ -111,6 +111,56 @@
                             <strong>Description :</strong><br>
                             <small><?= htmlspecialchars($goal['plan']['regime_description'] ?? 'Pas de description') ?></small>
                         </div>
+
+                        <!-- Composition du Régime -->
+                        <hr>
+                        <div class="mb-3">
+                            <strong>Composition du Régime :</strong>
+                            <div class="mt-2">
+                                <div class="mb-2">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <small>🥩 Viande</small>
+                                        <strong><?= $goal['plan']['pourcentage_viande'] ?? 0 ?>%</strong>
+                                    </div>
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar bg-danger" role="progressbar" 
+                                             style="width: <?= $goal['plan']['pourcentage_viande'] ?? 0 ?>%"
+                                             aria-valuenow="<?= $goal['plan']['pourcentage_viande'] ?? 0 ?>" 
+                                             aria-valuemin="0" aria-valuemax="100">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-2">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <small>🐟 Poisson</small>
+                                        <strong><?= $goal['plan']['pourcentage_poisson'] ?? 0 ?>%</strong>
+                                    </div>
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar bg-info" role="progressbar" 
+                                             style="width: <?= $goal['plan']['pourcentage_poisson'] ?? 0 ?>%"
+                                             aria-valuenow="<?= $goal['plan']['pourcentage_poisson'] ?? 0 ?>" 
+                                             aria-valuemin="0" aria-valuemax="100">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-2">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <small>🍗 Volaille</small>
+                                        <strong><?= $goal['plan']['pourcentage_volaille'] ?? 0 ?>%</strong>
+                                    </div>
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar bg-warning" role="progressbar" 
+                                             style="width: <?= $goal['plan']['pourcentage_volaille'] ?? 0 ?>%"
+                                             aria-valuenow="<?= $goal['plan']['pourcentage_volaille'] ?? 0 ?>" 
+                                             aria-valuemin="0" aria-valuemax="100">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="alert alert-info">
                             <small>
                                 <strong>💡 Conseil :</strong> Suivez ce régime quotidiennement et combinez-le avec l'activité recommandée pour optimiser vos résultats.
@@ -162,6 +212,12 @@
                         <h5 class="mb-0">Résumé de Votre Plan Quotidien</h5>
                     </div>
                     <div class="card-body">
+                        <?php
+                            $caloriePerMin = $goal['plan']['calories_burn_per_hour'] / 60;
+                            $caloriePerDay = round($caloriePerMin * $goal['plan']['minutes_per_day']);
+                            $dailyTarget = (int) ($goal['daily_calorie_target'] ?? 0);
+                            $remainingGap = max(0, $dailyTarget - $caloriePerDay);
+                        ?>
                         <div class="row text-center">
                             <div class="col-md-4">
                                 <h6>Apport Calorique</h6>
@@ -169,28 +225,32 @@
                                 <small class="text-muted">Régime</small>
                             </div>
                             <div class="col-md-4">
-                                <h6>Dépense Calorique</h6>
+                                <h6>
+                                    <?= $goal['type'] === 'gain' ? 'Surplus Cible Exact' : 'Dépense Cible Exacte' ?>
+                                </h6>
                                 <p class="display-6 text-danger">
-                                    <?php
-                                        $caloriePerMin = $goal['plan']['calories_burn_per_hour'] / 60;
-                                        $caloriePerDay = round($caloriePerMin * $goal['plan']['minutes_per_day']);
-                                        echo $caloriePerDay . ' kcal';
-                                    ?>
+                                    <?= $dailyTarget ?> kcal
                                 </p>
-                                <small class="text-muted"><?= $goal['plan']['minutes_per_day'] ?> min d'activité</small>
+                                <small class="text-muted">
+                                    <?= $goal['type'] === 'gain' ? 'Excédent/jour requis pour atteindre le poids cible' : 'Déficit/jour requis pour atteindre le poids cible' ?>
+                                </small>
                             </div>
                             <div class="col-md-4">
-                                <h6>Bilan Calorique</h6>
-                                <p class="display-6 text-info">
-                                    <?php
-                                        $caloriePerMin = $goal['plan']['calories_burn_per_hour'] / 60;
-                                        $caloriePerDay = round($caloriePerMin * $goal['plan']['minutes_per_day']);
-                                        $bilan = $goal['plan']['calories_per_day'] - $caloriePerDay;
-                                        echo ($bilan > 0 ? '+' : '') . $bilan . ' kcal';
-                                    ?>
-                                </p>
-                                <small class="text-muted">Journalier</small>
+                                <h6>Dépense Activité + Reste</h6>
+                                <p class="display-6 text-info"><?= $caloriePerDay ?> kcal</p>
+                                <small class="text-muted">Activité: <?= $goal['plan']['minutes_per_day'] ?> min/jour</small>
                             </div>
+                        </div>
+
+                        <hr>
+                        <div class="text-center">
+                            <p class="mb-1">
+                                <strong>Reste à couvrir avec l'alimentation/activité:</strong>
+                                <span class="badge bg-secondary"><?= $remainingGap ?> kcal/jour</span>
+                            </p>
+                            <small class="text-muted">
+                                Calcul exact basé sur la différence entre poids actuel et poids cible (1 kg = 7700 kcal).
+                            </small>
                         </div>
                     </div>
                 </div>

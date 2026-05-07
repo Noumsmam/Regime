@@ -85,6 +85,24 @@ class GoalsController extends BaseController
             return redirect()->back()->withInput();
         }
 
+        // Validate weight target based on current weight
+        $userModel = new \App\Models\UserModel();
+        $userInfo = $userModel->getUserWithInfo($userId);
+        if ($userInfo) {
+            $currentWeight = (float)$userInfo['poids'];
+            $targetWeight = (float)$targetValue;
+
+            if ($type === 'lose' && $targetWeight > $currentWeight) {
+                session()->setFlashdata('error', 'Pour réduire votre poids, la cible doit être inférieure à votre poids actuel (' . $currentWeight . ' kg).');
+                return redirect()->back()->withInput();
+            }
+
+            if ($type === 'gain' && $targetWeight < $currentWeight) {
+                session()->setFlashdata('error', 'Pour augmenter votre poids, la cible doit être supérieure à votre poids actuel (' . $currentWeight . ' kg).');
+                return redirect()->back()->withInput();
+            }
+        }
+
         try {
             $goalService = new \App\Services\GoalService();
             $goalId = $goalService->createGoal(

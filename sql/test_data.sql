@@ -73,4 +73,18 @@ INSERT INTO userRegime (id_user, id_regime, id_sport) VALUES
 (2, 1, 1),
 (1, 5, 2);
 
--- End of test data
+-- Données de test (5 régimes)
+INSERT INTO regimes (name, calories_per_day, description, difficulty) VALUES
+('Régime Léger - Maintien', 2000, 'Régime équilibré pour maintenir son poids avec 2000 calories par jour.', 'easy'),
+('Régime Amaigrissant - Modéré', 1500, 'Régime modéré pour perdre du poids progressivement : 1500 calories par jour.', 'medium'),
+('Régime Amaigrissant - Intensif', 1200, 'Régime intensif pour une perte de poids rapide : 1200 calories par jour.', 'hard'),
+('Régime Gainant - Modéré', 2800, 'Régime pour prendre du poids sainement : 2800 calories par jour riche en protéines.', 'medium'),
+('Régime Gainant - Intensif', 3500, 'Régime intensif pour prendre du poids rapidement : 3500 calories par jour.', 'hard');
+
+-- Données de test (5 activités)
+INSERT INTO activities (name, calories_burn_per_hour, intensity) VALUES
+('Marche rapide', 300, 'low'),
+('Jogging', 600, 'medium'),
+('Course à pied', 800, 'high'),
+('Musculation', 500, 'medium'),
+('Cardio intense (HIIT)', 900, 'high');

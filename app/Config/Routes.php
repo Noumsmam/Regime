@@ -27,5 +27,15 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
     $routes->post('/goals/store', 'GoalsController::store');
     $routes->get('/goals/(:num)/activate', 'GoalsController::activate/$1');
     $routes->get('/goals/(:num)/complete', 'GoalsController::complete/$1');
+    $routes->get('/goals/(:num)/plan', 'GoalsController::showPlan/$1');
+
+    // Regimes routes (CRUD)
+    $routes->get('/regimes', 'RegimesController::index');
+    $routes->get('/regimes/create', 'RegimesController::create');
+    $routes->post('/regimes/store', 'RegimesController::store');
+    $routes->get('/regimes/(:num)/edit', 'RegimesController::edit/$1');
+    $routes->post('/regimes/(:num)/update', 'RegimesController::update/$1');
+    $routes->get('/regimes/(:num)/delete', 'RegimesController::delete/$1');
+    $routes->post('/regimes/(:num)/destroy', 'RegimesController::destroy/$1');
 });
 

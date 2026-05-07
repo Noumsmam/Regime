@@ -105,7 +105,38 @@ class GoalService
         }
 
         $goal['plan'] = $this->userGoalsPlanModel->getPlanForGoal($goalId);
+
+        // Expose exact daily calorie target for the goal (kg difference based).
+        if (in_array($goal['type'], ['lose', 'gain'], true)) {
+            $goal['daily_calorie_target'] = $this->calculateIdealCaloriesToBurn($userId, $goal);
+        } else {
+            $goal['daily_calorie_target'] = 0;
+        }
+
         return $goal;
+    }
+
+    public function calculateIdealCaloriesToBurn($userId, $goal)
+    {
+        // Calculate ideal daily calorie burn based on weight difference and duration
+        $userInfo = $this->userModel->getUserWithInfo($userId);
+        if (!$userInfo) {
+            return 0;
+        }
+
+        $currentWeight = (float)$userInfo['poids'];
+        $targetWeight = (float)$goal['target_value'];
+        $durationDays = (int)$goal['duration_days'];
+
+        // 1 kg = approximately 7700 calories
+        $caloriesPerKg = 7700;
+        $weightDifference = abs($currentWeight - $targetWeight);
+        $totalCaloriesDifference = $weightDifference * $caloriesPerKg;
+        
+        // Distribute over duration
+        $dailyCalorieDifference = round($totalCaloriesDifference / $durationDays);
+        
+        return $dailyCalorieDifference;
     }
 
     public function getUserGoalsWithProgress($userId)
