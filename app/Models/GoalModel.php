@@ -12,7 +12,7 @@ class GoalModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['user_id', 'type', 'target_value', 'duration_days', 'start_date', 'end_date', 'status'];
+    protected $allowedFields    = ['user_id', 'type', 'target_value', 'duration_days', 'start_date', 'end_date', 'status', 'created_at', 'updated_at'];
 
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';
@@ -51,14 +51,17 @@ class GoalModel extends Model
 
     public function activateGoal($goalId, $userId)
     {
+        // Get the goal first to get duration_days
         $goal = $this->find($goalId);
-        if (!$goal) {
+        if (!$goal || $goal['user_id'] != $userId) {
             return false;
         }
 
         $endDate = date('Y-m-d H:i:s', strtotime('+' . $goal['duration_days'] . ' days'));
 
-        return $this->where('id', $goalId)
+        // Use builder for direct SQL control
+        return $this->builder()
+                    ->where('id', $goalId)
                     ->where('user_id', $userId)
                     ->update([
                         'status'     => 'active',

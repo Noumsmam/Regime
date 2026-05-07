@@ -174,4 +174,38 @@ class GoalsController extends BaseController
             return redirect()->to('/goals');
         }
     }
+
+    /**
+     * GET /goals/{id}/plan
+     * Display the plan (regime + activity) for a goal
+     */
+    public function showPlan($goalId = null)
+    {
+        $userId = $this->currentUserId();
+        if (!$userId) {
+            return redirect()->to('/login');
+        }
+
+        if (!$goalId) {
+            session()->setFlashdata('error', 'Objectif non trouvé.');
+            return redirect()->to('/goals');
+        }
+
+        try {
+            $goalService = new \App\Services\GoalService();
+            $goalWithPlan = $goalService->getGoalWithPlan((int) $goalId, $userId);
+
+            if (!$goalWithPlan) {
+                session()->setFlashdata('error', 'Objectif non trouvé.');
+                return redirect()->to('/goals');
+            }
+
+            return view('pages/goals/plan', [
+                'goal' => $goalWithPlan,
+            ]);
+        } catch (\Exception $e) {
+            session()->setFlashdata('error', 'Erreur : ' . $e->getMessage());
+            return redirect()->to('/goals');
+        }
+    }
 }

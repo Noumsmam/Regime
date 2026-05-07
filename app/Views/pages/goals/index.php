@@ -126,6 +126,9 @@
                                     <a href="/goals/<?= $goal['id'] ?>/complete" class="btn btn-sm btn-success">
                                         Marquer complété
                                     </a>
+                                    <a href="/goals/<?= $goal['id'] ?>/plan" class="btn btn-sm btn-info">
+                                        Voir mon plan
+                                    </a>
                                 <?php endif; ?>
                             </div>
                         </div>

@@ -4,18 +4,27 @@ namespace App\Services;
 
 use App\Models\GoalModel;
 use App\Models\UserModel;
+use App\Models\RegimeModel;
+use App\Models\ActivityModel;
+use App\Models\UserGoalsPlanModel;
 
 class GoalService
 {
     protected $goalModel;
     protected $userModel;
     protected $imcService;
+    protected $regimeModel;
+    protected $activityModel;
+    protected $userGoalsPlanModel;
 
     public function __construct()
     {
         $this->goalModel  = new GoalModel();
         $this->userModel   = new UserModel();
         $this->imcService  = new ImcService();
+        $this->regimeModel = new RegimeModel();
+        $this->activityModel = new ActivityModel();
+        $this->userGoalsPlanModel = new UserGoalsPlanModel();
     }
 
     public function createGoal($userId, $type, $targetValue, $durationDays)
@@ -38,7 +47,65 @@ class GoalService
             return false;
         }
 
-        return $this->goalModel->activateGoal($goalId, $userId);
+        // Activate the goal
+        $activated = $this->goalModel->activateGoal($goalId, $userId);
+
+        // Auto-assign regime and activity based on goal type
+        if ($activated) {
+            $this->assignPlanToGoal($goal);
+        }
+
+        return $activated;
+    }
+
+    public function assignPlanToGoal($goal)
+    {
+        $characteristics = $this->suggestRegimeCharacteristics($goal['type'], $goal['duration_days']);
+
+        // Select regime based on calorie range and difficulty
+        $regime = $this->regimeModel->getByCalorieRange(
+            $characteristics['calories_range'][0],
+            $characteristics['calories_range'][1]
+        );
+
+        if (!$regime) {
+            $regime = $this->regimeModel->where('difficulty', $characteristics['intensity'])->findAll();
+        }
+
+        $selectedRegime = !empty($regime) ? $regime[0] : $this->regimeModel->first();
+
+        // Select activity based on intensity
+        $activity = $this->activityModel->where('intensity', $characteristics['intensity'])->findAll();
+        $selectedActivity = !empty($activity) ? $activity[0] : $this->activityModel->first();
+
+        // Calculate minutes per day based on goal type
+        $minutesPerDay = 30;
+        if ($characteristics['intensity'] === 'high') {
+            $minutesPerDay = 45;
+        } elseif ($characteristics['intensity'] === 'low') {
+            $minutesPerDay = 20;
+        }
+
+        // Create plan
+        if ($selectedRegime && $selectedActivity) {
+            $this->userGoalsPlanModel->createPlan(
+                $goal['id'],
+                $selectedRegime['id'],
+                $selectedActivity['id'],
+                $minutesPerDay
+            );
+        }
+    }
+
+    public function getGoalWithPlan($goalId, $userId)
+    {
+        $goal = $this->goalModel->getGoalById($goalId, $userId);
+        if (!$goal) {
+            return null;
+        }
+
+        $goal['plan'] = $this->userGoalsPlanModel->getPlanForGoal($goalId);
+        return $goal;
     }
 
     public function getUserGoalsWithProgress($userId)

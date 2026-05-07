@@ -60,14 +60,6 @@ CREATE TABLE sport(
     libelle VARCHAR(50)
 );
 
-CREATE TABLE regime(
-    id PRIMARY KEY AUTO_INCREMENT,
-    viande FLOAT NOT NULL,
-    poisson FLOAT NOT NULL,
-    volaille FLOAT NOT NULL,
-    duree INT NOT NULL,
-    prix FLOAT
-);
 
 CREATE TABLE userRegime(
     id_user INT NOT NULL,
@@ -78,3 +70,40 @@ CREATE TABLE userRegime(
     FOREIGN KEY (id_sport) REFERENCES sport(id),
 
 );
+
+-- Régimes
+CREATE TABLE regimes (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    calories_per_day INT UNSIGNED NOT NULL,
+    description TEXT,
+    difficulty ENUM('easy', 'medium', 'hard') DEFAULT 'medium',
+    created_at DATETIME NULL,
+    updated_at DATETIME NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Activités
+CREATE TABLE activities (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    calories_burn_per_hour INT UNSIGNED NOT NULL,
+    intensity ENUM('low', 'medium', 'high') DEFAULT 'medium',
+    created_at DATETIME NULL,
+    updated_at DATETIME NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Plans (lien goal → régime + activité)
+CREATE TABLE user_goals_plan (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    goal_id INT UNSIGNED NOT NULL,
+    regime_id INT UNSIGNED NOT NULL,
+    activity_id INT UNSIGNED NOT NULL,
+    minutes_per_day INT UNSIGNED DEFAULT 30,
+    created_at DATETIME NULL,
+    updated_at DATETIME NULL,
+    KEY goal_id (goal_id),
+    KEY regime_id (regime_id),
+    KEY activity_id (activity_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
