@@ -152,11 +152,22 @@ class AuthController extends BaseController
             return redirect()->back()->with('errors', $validation->getErrors());
         }
 
+        // Log lookup for debugging
+        log_message('debug', '[Auth] Login attempt for: ' . ($email ?? '[no-email]'));
         $user = $model->where('email', $email)->first();
-        
-        if (!$user || !password_verify($password, $user['password'])) {
+        log_message('debug', '[Auth] User lookup result: ' . ($user ? 'found' : 'not-found'));
+
+        if (!$user) {
+            log_message('warning', '[Auth] Login failed - user not found: ' . ($email ?? '[no-email]'));
             return redirect()->back()->with('error', 'Email ou mot de passe incorrect.');
         }
+
+        if (!password_verify($password, $user['password'])) {
+            log_message('warning', '[Auth] Login failed - invalid password for: ' . ($email ?? '[no-email]'));
+            return redirect()->back()->with('error', 'Email ou mot de passe incorrect.');
+        }
+
+        log_message('info', '[Auth] Login successful for user id: ' . ($user['id'] ?? 'unknown'));
 
         $genreRow = db_connect()->table('genre')->where('id', $user['id_genre'])->get()->getFirstRow('array');
 

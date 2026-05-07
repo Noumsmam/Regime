@@ -18,13 +18,23 @@
 
     <form action="/login" method="post">
     <?= csrf_field() ?>
+    <?php if(session()->getFlashdata('error')): ?>
+      <div class="alert alert-error"><?= esc(session()->getFlashdata('error')) ?></div>
+    <?php endif; ?>
+    <?php if(session()->getFlashdata('errors')): ?>
+      <div class="alert alert-error">
+        <?php foreach(session()->getFlashdata('errors') as $err): ?>
+          <div><?= esc($err) ?></div>
+        <?php endforeach; ?>
+      </div>
+    <?php endif; ?>
     <div class="field-group">
       <label>Adresse e-mail</label>
       <div class="input-wrap">
         <div class="icon">
           <svg viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
         </div>
-        <input type="email" placeholder="" value="" name="email"/>
+        <input type="email" placeholder="" value="<?= esc(old('email')) ?>" name="email"/>
       </div>
     </div>
 
