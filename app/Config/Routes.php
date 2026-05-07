@@ -20,5 +20,12 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
     $routes->get('/deconnexion', 'AuthController::logout');
     $routes->get('/dashboard', 'Pages::dashboard');
     $routes->get('/utilisateurs', 'Pages::utilisateurs');
+    
+    // Goals routes
+    $routes->get('/goals', 'GoalsController::index');
+    $routes->get('/goals/create', 'GoalsController::create');
+    $routes->post('/goals/store', 'GoalsController::store');
+    $routes->get('/goals/(:num)/activate', 'GoalsController::activate/$1');
+    $routes->get('/goals/(:num)/complete', 'GoalsController::complete/$1');
 });
 
