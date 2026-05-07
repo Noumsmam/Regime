@@ -12,6 +12,32 @@
   </button>
 </div>
 
+<?php if (!empty($user)): ?>
+<div class="card" style="margin-bottom: 20px; border-left: 4px solid <?= esc($imcStatus['color'] ?? 'gray') ?>;">
+  <div class="card-header">
+    <div class="card-title">Mon IMC</div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;align-items:center;">
+    <div>
+      <div style="font-size:12px;color:var(--c-muted);margin-bottom:6px;">Utilisateur</div>
+      <div style="font-weight:700;"><?= esc($user['username'] ?? $user['nom'] ?? 'Utilisateur') ?></div>
+    </div>
+    <div>
+      <div style="font-size:12px;color:var(--c-muted);margin-bottom:6px;">IMC</div>
+      <div style="font-weight:700;font-size:22px;"><?= number_format((float)($imc ?? 0), 2, ',', ' ') ?></div>
+    </div>
+    <div>
+      <div style="font-size:12px;color:var(--c-muted);margin-bottom:6px;">Catégorie</div>
+      <div style="font-weight:700;"><?= esc($imcStatus['status'] ?? 'Unknown') ?></div>
+    </div>
+    <div>
+      <div style="font-size:12px;color:var(--c-muted);margin-bottom:6px;">Taille / Poids</div>
+      <div style="font-weight:700;"><?= esc($user['taille'] ?? 0) ?> cm / <?= esc($user['poids'] ?? 0) ?> kg</div>
+    </div>
+  </div>
+</div>
+<?php endif; ?>
+
 <div class="kpi-grid">
 
   <div class="kpi-card">

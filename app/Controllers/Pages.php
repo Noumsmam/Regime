@@ -2,6 +2,9 @@
 
 namespace App\Controllers;
 
+use App\Models\UserModel;
+use App\Services\ImcService;
+
 class Pages extends BaseController
 {
     public function login(): string
@@ -14,10 +17,32 @@ class Pages extends BaseController
 
     public function dashboard(): string
     {
+        $userSession = session()->get('user');
+        $user = null;
+        $imc = 0;
+        $imcStatus = [
+            'category' => 'Unknown',
+            'status' => 'Unknown',
+            'color' => 'gray',
+        ];
+
+        if ($userSession && isset($userSession['id'])) {
+            $userModel = new UserModel();
+            $user = $userModel->getUserWithInfo($userSession['id']);
+
+            if ($user) {
+                $imc = ImcService::calculateImc($user['poids'] ?? 0, $user['taille'] ?? 0);
+                $imcStatus = ImcService::getImcStatus($imc);
+            }
+        }
+
         return view('pages/dashboard', [
             'title' => 'EtuNote — Tableau de bord',
             'pageTitle' => 'Tableau de bord',
             'activeMenu' => 'dashboard',
+            'user' => $user,
+            'imc' => $imc,
+            'imcStatus' => $imcStatus,
         ]);
     }
 
