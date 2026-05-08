@@ -39,6 +39,15 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
     $routes->post('/regimes/(:num)/destroy', 'RegimesController::destroy/$1');
     $routes->post('/regimes/(:num)/buy', 'RegimesController::buyRegime/$1');
 
+    // Activities routes (CRUD)
+    $routes->get('/activities', 'ActivitiesController::index');
+    $routes->get('/activities/create', 'ActivitiesController::create');
+    $routes->post('/activities/store', 'ActivitiesController::store');
+    $routes->get('/activities/(:num)/edit', 'ActivitiesController::edit/$1');
+    $routes->post('/activities/(:num)/update', 'ActivitiesController::update/$1');
+    $routes->get('/activities/(:num)/delete', 'ActivitiesController::delete/$1');
+    $routes->post('/activities/(:num)/destroy', 'ActivitiesController::destroy/$1');
+
     // Wallet / coupons routes
     $routes->get('/wallet', 'WalletController::index');
     $routes->post('/wallet/redeem', 'WalletController::redeemCoupon');

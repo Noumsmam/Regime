@@ -54,6 +54,10 @@ $searchPlaceholder = $searchPlaceholder ?? 'Rechercher...';
       <svg viewBox="0 0 24 24"><path d="M3 3h18v4H3z"/><path d="M5 9h14v12H5z"/></svg>
       Regimes
     </a>
+    <a href="/activities" class="<?= ($activeMenu === 'activities') ? 'nav-item active' : 'nav-item' ?>">
+      <svg viewBox="0 0 24 24"><path d="M5 4h14v16H5z"/><path d="M8 8h8"/><path d="M8 12h8"/><path d="M8 16h5"/></svg>
+      Activités
+    </a>
     <a href="/wallet" class="<?= ($activeMenu === 'wallet') ? 'nav-item active' : 'nav-item' ?>">
       <svg viewBox="0 0 24 24"><path d="M3 7h18v10H3z"/><path d="M16 12h4"/></svg>
       Portefeuille
