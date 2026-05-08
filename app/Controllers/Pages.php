@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
+use App\Models\WalletModel;
 use App\Services\ImcService;
 
 class Pages extends BaseController
@@ -19,6 +20,7 @@ class Pages extends BaseController
     {
         $userSession = session()->get('user');
         $user = null;
+        $walletBalance = 0;
         $imc = 0;
         $imcStatus = [
             'category' => 'Unknown',
@@ -29,6 +31,14 @@ class Pages extends BaseController
         if ($userSession && isset($userSession['id'])) {
             $userModel = new UserModel();
             $user = $userModel->getUserWithInfo($userSession['id']);
+
+            try {
+                $walletModel = new WalletModel();
+                $wallet = $walletModel->getOrCreateByUserId((int) $userSession['id']);
+                $walletBalance = (float) ($wallet['balance'] ?? 0);
+            } catch (\Throwable $e) {
+                $walletBalance = 0;
+            }
 
             if ($user) {
                 $imc = ImcService::calculateImc($user['poids'] ?? 0, $user['taille'] ?? 0);
@@ -41,6 +51,7 @@ class Pages extends BaseController
             'pageTitle' => 'Tableau de bord',
             'activeMenu' => 'dashboard',
             'user' => $user,
+            'walletBalance' => $walletBalance,
             'imc' => $imc,
             'imcStatus' => $imcStatus,
         ]);
