@@ -3,9 +3,38 @@
 namespace App\Controllers;
 
 use App\Models\RegimeModel;
+use App\Models\UserRegimePurchaseModel;
+use App\Models\WalletModel;
+use App\Services\DiscountService;
 
 class RegimesController extends BaseController
 {
+    private function getDefaultRegimePrice(?string $name): ?float
+    {
+        $defaults = [
+            'Régime Léger - Maintien' => 4.99,
+            'Régime Amaigrissant - Modéré' => 6.99,
+            'Régime Amaigrissant - Intensif' => 7.99,
+            'Régime Gainant - Modéré' => 5.99,
+            'Régime Gainant - Intensif' => 8.99,
+        ];
+
+        return $name !== null && array_key_exists($name, $defaults) ? $defaults[$name] : null;
+    }
+
+    private function normalizeRegimePrices(array $regimes): array
+    {
+        foreach ($regimes as &$regime) {
+            $regimeName = isset($regime['name']) && is_string($regime['name']) ? $regime['name'] : null;
+
+            if (!isset($regime['price']) || $regime['price'] === null || $regime['price'] === '') {
+                $regime['price'] = $this->getDefaultRegimePrice($regimeName);
+            }
+        }
+
+        return $regimes;
+    }
+
     private function currentUserId(): ?int
     {
         $user = session()->get('user');
@@ -35,11 +64,20 @@ class RegimesController extends BaseController
             return redirect()->to('/login');
         }
 
+        $userId = $this->currentUserId();
         $regimeModel = new RegimeModel();
-        $regimes = $regimeModel->findAll();
+        $discountService = new DiscountService();
+
+        $regimes = $this->normalizeRegimePrices($regimeModel->findAll());
+        
+        // Ajouter les infos de remise pour chaque régime
+        $discount = $discountService->getDiscountPercentage($userId);
+        $userOptions = $discountService->getUserOptions($userId);
 
         return view('pages/regimes/index', [
             'regimes' => $regimes,
+            'discount' => $discount,
+            'userOptions' => $userOptions,
         ]);
     }
 
@@ -267,6 +305,94 @@ class RegimesController extends BaseController
         } catch (\Exception $e) {
             session()->setFlashdata('error', 'Erreur lors de la suppression : ' . $e->getMessage());
             return redirect()->to('/regimes');
+        }
+    }
+
+    /**
+     * POST /regimes/{id}/buy
+     * Buy a regime plan
+     */
+    public function buyRegime($regimeId = null)
+    {
+        $userId = $this->currentUserId();
+        if (!$userId) {
+            return redirect()->to('/login')->with('error', 'Veuillez vous connecter.');
+        }
+
+        if (!$regimeId) {
+            return redirect()->back()->with('error', 'Régime non trouvé.');
+        }
+
+        $regimeModel = new RegimeModel();
+        $purchaseModel = new UserRegimePurchaseModel();
+        $discountService = new DiscountService();
+        $walletModel = new WalletModel();
+        $db = db_connect();
+
+        $regime = $regimeModel->find($regimeId);
+        if (!$regime) {
+            return redirect()->back()->with('error', 'Régime non trouvé.');
+        }
+
+        // Vérifier si le prix existe, avec prix par défaut pour les régimes connus
+        $regimeName = isset($regime['name']) && is_string($regime['name']) ? $regime['name'] : null;
+        $regime['price'] = $regime['price'] ?? $this->getDefaultRegimePrice($regimeName);
+        if (!isset($regime['price']) || $regime['price'] === null) {
+            return redirect()->back()->with('error', 'Ce régime n\'est pas disponible à l\'achat.');
+        }
+
+        // Vérifier si l'utilisateur a déjà acheté ce régime
+        if ($purchaseModel->hasPurchased($userId, $regimeId)) {
+            return redirect()->back()->with('info', 'Vous avez déjà acheté ce régime.');
+        }
+
+        // Vérifier le solde du portefeuille depuis la table wallets
+        $wallet = $walletModel->getOrCreateByUserId($userId);
+
+        // Calculer le prix avec remise si l'utilisateur a une option Gold
+        $discountPercentage = $discountService->getDiscountPercentage($userId);
+        $finalPrice = $discountService->applyDiscount((float)$regime['price'], $discountPercentage);
+
+        if ($wallet['balance'] < $finalPrice) {
+            $needed = number_format($finalPrice, 2, ',', ' ');
+            $have = number_format($wallet['balance'], 2, ',', ' ');
+            return redirect()->back()->with('error', 
+                'Solde insuffisant. Prix : ' . $needed . '€ (vous avez ' . $have . '€)');
+        }
+
+        try {
+            $db->transStart();
+
+            // Débiter du portefeuille
+            $walletModel->update($wallet['id'], [
+                'balance' => $wallet['balance'] - $finalPrice
+            ]);
+
+            // Enregistrer l'achat
+            $purchaseModel->insert([
+                'user_id' => $userId,
+                'regime_id' => $regimeId,
+                'price_paid' => $finalPrice,
+                'discount_applied' => $discountPercentage,
+                'purchased_at' => date('Y-m-d H:i:s')
+            ]);
+
+            $db->transComplete();
+
+            if ($db->transStatus() === false) {
+                return redirect()->back()->with('error', 'Erreur lors de l\'achat du régime.');
+            }
+
+            $discountMsg = $discountPercentage > 0 ? 
+                ' (Remise de ' . $discountPercentage . '% appliquée)' : '';
+            
+            return redirect()->back()->with('success', 
+                'Régime "' . $regime['name'] . '" acheté avec succès ! ' . 
+                number_format($finalPrice, 2, ',', ' ') . '€ débité.' . $discountMsg);
+
+        } catch (\Exception $e) {
+            log_message('error', '[Regimes] Purchase error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Erreur lors de l\'achat.');
         }
     }
 }

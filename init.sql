@@ -52,7 +52,10 @@ CREATE TABLE porteMonnaie (
 CREATE TABLE offre (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     libelle VARCHAR(50) NOT NULL,
-    remise DECIMAL(5,2) NOT NULL DEFAULT 0
+    remise DECIMAL(5,2) NOT NULL DEFAULT 0,
+    price DECIMAL(10,2) NULL DEFAULT NULL,
+    created_at DATETIME NULL,
+    updated_at DATETIME NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE userOffre (
@@ -101,6 +104,7 @@ CREATE TABLE regimes (
     pourcentage_viande DECIMAL(5,2) NOT NULL DEFAULT 0,
     pourcentage_poisson DECIMAL(5,2) NOT NULL DEFAULT 0,
     pourcentage_volaille DECIMAL(5,2) NOT NULL DEFAULT 0,
+    price DECIMAL(10,2) NULL DEFAULT NULL,
     created_at DATETIME NULL,
     updated_at DATETIME NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

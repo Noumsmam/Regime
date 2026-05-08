@@ -21,7 +21,7 @@ class UserGoalsPlanModel extends Model
 
     public function getPlanForGoal($goalId)
     {
-        return $this->select('user_goals_plan.*, regimes.name as regime_name, regimes.calories_per_day, regimes.description as regime_description, regimes.pourcentage_viande, regimes.pourcentage_poisson, regimes.pourcentage_volaille, activities.name as activity_name, activities.calories_burn_per_hour')
+        return $this->select('user_goals_plan.*, regimes.name as regime_name, regimes.calories_per_day, regimes.description as regime_description, regimes.pourcentage_viande, regimes.pourcentage_poisson, regimes.pourcentage_volaille, regimes.price as regime_price, activities.name as activity_name, activities.calories_burn_per_hour')
                     ->join('regimes', 'regimes.id = user_goals_plan.regime_id', 'left')
                     ->join('activities', 'activities.id = user_goals_plan.activity_id', 'left')
                     ->where('goal_id', $goalId)

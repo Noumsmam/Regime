@@ -25,6 +25,35 @@
         </div>
     <?php endif; ?>
 
+    <!-- Options actuelles -->
+    <?php if (!empty($userOptions)): ?>
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="alert alert-success">
+                    <h5 class="mb-3">🎁 Options Premium Actives</h5>
+                    <div class="row">
+                        <?php foreach ($userOptions as $option): ?>
+                            <div class="col-md-4">
+                                <div class="badge bg-success" style="font-size: 1rem; padding: 0.75rem;">
+                                    <strong><?= esc($option['libelle']) ?></strong><br>
+                                    <?= $option['remise'] ?>% de remise 🏷️
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php else: ?>
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="alert alert-info">
+                    💡 Vous n'avez pas d'option premium. <a href="/offres"><strong>Achetez l'option Gold</strong></a> pour bénéficier de 15% de remise sur tous les régimes !
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
+
     <?php if (!empty($regimes)): ?>
         <div class="table-responsive">
             <table class="table table-striped table-hover">
@@ -35,6 +64,7 @@
                         <th>Difficulté</th>
                         <th>Composition</th>
                         <th>Description</th>
+                        <th>Prix</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -68,6 +98,17 @@
                                 </small>
                             </td>
                             <td><?= substr(htmlspecialchars($regime['description']), 0, 50); ?>...</td>
+                            <td>
+                                <?php if (!empty($regime['price'])): ?>
+                                    <strong><?= number_format((float)$regime['price'], 2, ',', ' ') ?>€</strong><br>
+                                    <form action="/regimes/<?= $regime['id']; ?>/buy" method="POST" style="display:inline;">
+                                        <?= csrf_field() ?>
+                                        <button type="submit" class="btn btn-sm btn-success">Acheter</button>
+                                    </form>
+                                <?php else: ?>
+                                    <span class="text-muted">Gratuit</span>
+                                <?php endif; ?>
+                            </td>
                             <td>
                                 <a href="/regimes/<?= $regime['id']; ?>/edit" class="btn btn-sm btn-warning">Modifier</a>
                                 <a href="/regimes/<?= $regime['id']; ?>/delete" class="btn btn-sm btn-danger">Supprimer</a>

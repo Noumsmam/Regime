@@ -18,7 +18,7 @@
         </div>
         <div class="card-body">
             <div style="font-size: 2rem; font-weight: 700; color: #0a7d38;">
-                <?= number_format((float) ($wallet['balance'] ?? 0), 2, ',', ' ') ?> Ar
+                <?= number_format((float) ($wallet['balance'] ?? 0), 2, ',', ' ') ?>€
             </div>
         </div>
     </div>
@@ -59,7 +59,7 @@
                         <?php foreach ($history as $row): ?>
                             <tr>
                                 <td><?= esc((string) $row['redeemed_at']) ?></td>
-                                <td>+<?= number_format((float) $row['amount'], 2, ',', ' ') ?> Ar</td>
+                                <td>Coupon +<?= number_format((float) $row['amount'], 2, ',', ' ') ?>€</td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

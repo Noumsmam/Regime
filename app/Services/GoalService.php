@@ -7,6 +7,7 @@ use App\Models\UserModel;
 use App\Models\RegimeModel;
 use App\Models\ActivityModel;
 use App\Models\UserGoalsPlanModel;
+use App\Models\UserRegimePurchaseModel;
 
 class GoalService
 {
@@ -16,6 +17,20 @@ class GoalService
     protected $regimeModel;
     protected $activityModel;
     protected $userGoalsPlanModel;
+    protected $userRegimePurchaseModel;
+
+    private function getDefaultRegimePrice(?string $name): ?float
+    {
+        $defaults = [
+            'Régime Léger - Maintien' => 4.99,
+            'Régime Amaigrissant - Modéré' => 6.99,
+            'Régime Amaigrissant - Intensif' => 7.99,
+            'Régime Gainant - Modéré' => 5.99,
+            'Régime Gainant - Intensif' => 8.99,
+        ];
+
+        return $name !== null && array_key_exists($name, $defaults) ? $defaults[$name] : null;
+    }
 
     public function __construct()
     {
@@ -25,6 +40,7 @@ class GoalService
         $this->regimeModel = new RegimeModel();
         $this->activityModel = new ActivityModel();
         $this->userGoalsPlanModel = new UserGoalsPlanModel();
+        $this->userRegimePurchaseModel = new UserRegimePurchaseModel();
     }
 
     public function createGoal($userId, $type, $targetValue, $durationDays)
@@ -105,6 +121,32 @@ class GoalService
         }
 
         $goal['plan'] = $this->userGoalsPlanModel->getPlanForGoal($goalId);
+
+        if (!empty($goal['plan'])) {
+            $planName = isset($goal['plan']['regime_name']) && is_string($goal['plan']['regime_name'])
+                ? $goal['plan']['regime_name']
+                : null;
+            $rawPrice = $goal['plan']['regime_price'] ?? null;
+
+            if ($rawPrice !== null && $rawPrice !== '') {
+                $goal['plan']['display_price'] = (float) $rawPrice;
+            } else {
+                $goal['plan']['display_price'] = $this->getDefaultRegimePrice($planName);
+            }
+
+            $regimeId = (int) ($goal['plan']['regime_id'] ?? 0);
+            $purchase = null;
+            if ($regimeId > 0) {
+                $purchase = $this->userRegimePurchaseModel
+                    ->where('user_id', $userId)
+                    ->where('regime_id', $regimeId)
+                    ->first();
+            }
+
+            $goal['plan']['is_purchased'] = $purchase !== null;
+            $goal['plan']['purchased_at'] = $purchase['purchased_at'] ?? null;
+            $goal['plan']['purchased_price'] = isset($purchase['price_paid']) ? (float) $purchase['price_paid'] : null;
+        }
 
         // Expose exact daily calorie target for the goal (kg difference based).
         if (in_array($goal['type'], ['lose', 'gain'], true)) {

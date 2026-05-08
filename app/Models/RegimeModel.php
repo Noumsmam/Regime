@@ -12,7 +12,7 @@ class RegimeModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['name', 'calories_per_day', 'description', 'difficulty', 'pourcentage_viande', 'pourcentage_poisson', 'pourcentage_volaille'];
+    protected $allowedFields    = ['name', 'calories_per_day', 'description', 'difficulty', 'pourcentage_viande', 'pourcentage_poisson', 'pourcentage_volaille', 'price'];
 
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';

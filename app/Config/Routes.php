@@ -37,9 +37,14 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
     $routes->post('/regimes/(:num)/update', 'RegimesController::update/$1');
     $routes->get('/regimes/(:num)/delete', 'RegimesController::delete/$1');
     $routes->post('/regimes/(:num)/destroy', 'RegimesController::destroy/$1');
+    $routes->post('/regimes/(:num)/buy', 'RegimesController::buyRegime/$1');
 
     // Wallet / coupons routes
     $routes->get('/wallet', 'WalletController::index');
     $routes->post('/wallet/redeem', 'WalletController::redeemCoupon');
+
+    // Options (offres) routes
+    $routes->get('/offres', 'OffresController::index');
+    $routes->post('/offres/buy/(:num)', 'OffresController::buy/$1');
 });
 

@@ -24,7 +24,7 @@
     </div>
     <div>
       <div style="font-size:12px;color:var(--c-muted);margin-bottom:6px;">Portefeuille</div>
-      <div style="font-weight:700;font-size:20px;color:#0a7d38;"><?= number_format((float)($walletBalance ?? 0), 2, ',', ' ') ?> Ar</div>
+      <div style="font-weight:700;font-size:20px;color:#0a7d38;"><?= number_format((float)($walletBalance ?? 0), 2, ',', ' ') ?>€</div>
     </div>
     <div>
       <div style="font-size:12px;color:var(--c-muted);margin-bottom:6px;">IMC</div>

@@ -46,14 +46,6 @@ $searchPlaceholder = $searchPlaceholder ?? 'Rechercher...';
       Utilisateurs
       <span class="nav-badge">24</span>
     </a> -->
-    <a href="/etudiants" class="<?= ($activeMenu === 'etudiants') ? 'nav-item active' : 'nav-item' ?>">
-      <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-      Etudiants
-    </a>
-    <a href="/notes/ajout" class="<?= ($activeMenu === 'ajout_note') ? 'nav-item active' : 'nav-item' ?>">
-      <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-      Ajout note
-    </a>
     <a href="/goals" class="<?= ($activeMenu === 'goals') ? 'nav-item active' : 'nav-item' ?>">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
       Objectifs
@@ -65,6 +57,10 @@ $searchPlaceholder = $searchPlaceholder ?? 'Rechercher...';
     <a href="/wallet" class="<?= ($activeMenu === 'wallet') ? 'nav-item active' : 'nav-item' ?>">
       <svg viewBox="0 0 24 24"><path d="M3 7h18v10H3z"/><path d="M16 12h4"/></svg>
       Portefeuille
+    </a>
+    <a href="/offres" class="<?= ($activeMenu === 'offres') ? 'nav-item active' : 'nav-item' ?>">
+      <svg viewBox="0 0 24 24"><path d="M6 9H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-2M6 9V7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2M6 13h12M9 17h6"/></svg>
+      Offres
     </a>
 
     <div class="sidebar-bottom">

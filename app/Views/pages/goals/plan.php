@@ -2,6 +2,8 @@
 
 <?= $this->section('content') ?>
 
+<?php $goal = $goal ?? []; ?>
+
 <div class="container mt-5">
     <div class="row mb-4">
         <div class="col-md-12">
@@ -21,6 +23,20 @@
     <?php if (session()->getFlashdata('error')): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <?= session()->getFlashdata('error') ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <?php endif; ?>
+
+    <?php if (session()->getFlashdata('success')): ?>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <?= session()->getFlashdata('success') ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <?php endif; ?>
+
+    <?php if (session()->getFlashdata('info')): ?>
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <?= session()->getFlashdata('info') ?>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     <?php endif; ?>
@@ -166,6 +182,40 @@
                                 <strong>💡 Conseil :</strong> Suivez ce régime quotidiennement et combinez-le avec l'activité recommandée pour optimiser vos résultats.
                             </small>
                         </div>
+
+                        <div class="mb-3">
+                            <strong>Prix :</strong>
+                            <?php if (isset($goal['plan']['display_price']) && $goal['plan']['display_price'] !== null): ?>
+                                <span class="badge bg-primary"><?= number_format((float) $goal['plan']['display_price'], 2, ',', ' ') ?>€</span>
+                            <?php else: ?>
+                                <span class="text-muted">Indisponible</span>
+                            <?php endif; ?>
+                        </div>
+
+                        <?php if (!empty($goal['plan']['is_purchased'])): ?>
+                            <div class="alert alert-success mb-0">
+                                <strong>Achat confirmé.</strong>
+                                <?php if (!empty($goal['plan']['purchased_price'])): ?>
+                                    Vous avez acheté ce régime pour <?= number_format((float) $goal['plan']['purchased_price'], 2, ',', ' ') ?>€.
+                                <?php else: ?>
+                                    Ce régime est déjà dans vos achats.
+                                <?php endif; ?>
+                                <?php if (!empty($goal['plan']['purchased_at'])): ?>
+                                    <br><small>Date d'achat : <?= date('d/m/Y à H:i', strtotime((string) $goal['plan']['purchased_at'])) ?></small>
+                                <?php endif; ?>
+                            </div>
+                        <?php elseif (isset($goal['plan']['display_price']) && $goal['plan']['display_price'] !== null): ?>
+                            <form action="/regimes/<?= $goal['plan']['regime_id'] ?? 0 ?>/buy" method="POST">
+                                <?= csrf_field() ?>
+                                <button type="submit" class="btn btn-success w-100">
+                                    Acheter ce régime recommandé
+                                </button>
+                            </form>
+                        <?php else: ?>
+                            <button type="button" class="btn btn-secondary w-100" disabled>
+                                Achat indisponible (prix manquant)
+                            </button>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

@@ -13,9 +13,9 @@ INSERT INTO Objectif (libelle) VALUES
 ('Réduire son poids'),
 ('Atteindre son IMC idéal');
 
-INSERT INTO offre (libelle, remise) VALUES
-('Gold', 15.00),
-('Silver', 5.00);
+INSERT INTO offre (libelle, remise, price, created_at, updated_at) VALUES
+('Gold', 15.00, 9.99, NOW(), NOW()),
+('Silver', 5.00, NULL, NOW(), NOW());
 
 INSERT INTO sport (libelle) VALUES
 ('Course'),
@@ -68,12 +68,12 @@ INSERT INTO goals (user_id, type, target_value, duration_days, start_date, end_d
 (4, 'gain', 75.00, 30, NULL, NULL, 'pending', NOW(), NOW()),
 (5, 'lose', 65.00, 60, NULL, NULL, 'pending', NOW(), NOW());
 
-INSERT INTO regimes (name, calories_per_day, description, difficulty, pourcentage_viande, pourcentage_poisson, pourcentage_volaille, created_at, updated_at) VALUES
-('Régime Léger - Maintien', 2000, 'Régime équilibré pour maintenir son poids avec 2000 calories par jour.', 'easy', 33.00, 33.00, 34.00, NOW(), NOW()),
-('Régime Amaigrissant - Modéré', 1500, 'Régime modéré pour perdre du poids progressivement : 1500 calories par jour.', 'medium', 30.00, 35.00, 35.00, NOW(), NOW()),
-('Régime Amaigrissant - Intensif', 1200, 'Régime intensif pour une perte de poids rapide : 1200 calories par jour.', 'hard', 20.00, 40.00, 40.00, NOW(), NOW()),
-('Régime Gainant - Modéré', 2800, 'Régime pour prendre du poids sainement : 2800 calories par jour riche en protéines.', 'medium', 40.00, 30.00, 30.00, NOW(), NOW()),
-('Régime Gainant - Intensif', 3500, 'Régime intensif pour prendre du poids rapidement : 3500 calories par jour.', 'hard', 35.00, 33.00, 32.00, NOW(), NOW());
+INSERT INTO regimes (name, calories_per_day, description, difficulty, pourcentage_viande, pourcentage_poisson, pourcentage_volaille, price, created_at, updated_at) VALUES
+('Régime Léger - Maintien', 2000, 'Régime équilibré pour maintenir son poids avec 2000 calories par jour.', 'easy', 33.00, 33.00, 34.00, 4.99, NOW(), NOW()),
+('Régime Amaigrissant - Modéré', 1500, 'Régime modéré pour perdre du poids progressivement : 1500 calories par jour.', 'medium', 30.00, 35.00, 35.00, 6.99, NOW(), NOW()),
+('Régime Amaigrissant - Intensif', 1200, 'Régime intensif pour une perte de poids rapide : 1200 calories par jour.', 'hard', 20.00, 40.00, 40.00, 7.99, NOW(), NOW()),
+('Régime Gainant - Modéré', 2800, 'Régime pour prendre du poids sainement : 2800 calories par jour riche en protéines.', 'medium', 40.00, 30.00, 30.00, 5.99, NOW(), NOW()),
+('Régime Gainant - Intensif', 3500, 'Régime intensif pour prendre du poids rapidement : 3500 calories par jour.', 'hard', 35.00, 33.00, 32.00, 8.99, NOW(), NOW());
 
 INSERT INTO activities (name, calories_burn_per_hour, intensity, created_at, updated_at) VALUES
 ('Marche rapide', 300, 'low', NOW(), NOW()),
