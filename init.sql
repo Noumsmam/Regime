@@ -40,6 +40,7 @@ CREATE TABLE userObjectif (
     CONSTRAINT fk_userobjectif_objectif FOREIGN KEY (id_objectif) REFERENCES Objectif(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+<<<<<<< HEAD
 CREATE TABLE porteMonnaie (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     id_user INT UNSIGNED NOT NULL UNIQUE,
@@ -48,6 +49,7 @@ CREATE TABLE porteMonnaie (
     updated_at DATETIME NULL,
     CONSTRAINT fk_portemonnaie_user FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+=======
 
 CREATE TABLE offre (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -71,6 +73,7 @@ CREATE TABLE sport (
     libelle VARCHAR(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+<<<<<<< HEAD
 CREATE TABLE userRegime (
     id_user INT UNSIGNED NOT NULL,
     id_regime INT UNSIGNED NOT NULL,
@@ -94,6 +97,8 @@ CREATE TABLE goals (
     updated_at DATETIME NULL,
     CONSTRAINT fk_goals_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+=======
+
 
 CREATE TABLE regimes (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
