@@ -1,47 +1,49 @@
 <?php echo $this->extend('layout'); ?>
+
 <?php echo $this->section('content'); ?>
+<div class="page">
+    <div class="card" style="border-top: 6px solid #e74c3c;">
+        <div class="card__header">
+            <p class="card__eyebrow" style="color: #e74c3c;">Zone de danger</p>
+            <h1>Confirmation</h1>
+            <p class="card__subtitle">
+                Êtes-vous sûr de vouloir supprimer l'activité <strong><?= esc($activity['name'] ?? ''); ?></strong> ?
+            </p>
+        </div>
 
-<div class="container mt-5">
-    <?php $activity = $activity ?? []; ?>
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <?php
-                $activityName = (string) ($activity['name'] ?? '');
-                $activityId = (int) ($activity['id'] ?? 0);
-                $caloriesBurnPerHour = (int) ($activity['calories_burn_per_hour'] ?? 0);
-                $intensity = (string) ($activity['intensity'] ?? 'medium');
-            ?>
-            <div class="card border-danger">
-                <div class="card-header bg-danger text-white">
-                    <h5 class="mb-0">Confirmation de suppression</h5>
-                </div>
-                <div class="card-body">
-                    <p class="mb-3">
-                        Êtes-vous sûr de vouloir supprimer l'activité <strong><?= esc($activityName); ?></strong> ?
-                    </p>
-                    <p class="text-muted small">
-                        <strong>Attention :</strong> Cette action est irréversible.
-                    </p>
+        <?php 
+            $activityId = (int) ($activity['id'] ?? 0);
+            $calories = (int) ($activity['calories_burn_per_hour'] ?? 0);
+            $intensity = (string) ($activity['intensity'] ?? 'medium');
+        ?>
 
-                    <div class="alert alert-warning">
-                        <p class="mb-0"><strong>Détails de l'activité :</strong></p>
-                        <ul class="mb-0 mt-2">
-                            <li>Calories brûlées par heure : <?= number_format($caloriesBurnPerHour); ?> kcal</li>
-                            <li>Intensité : <?= esc(ucfirst($intensity)); ?></li>
-                        </ul>
-                    </div>
+        <div style="background: rgba(217, 124, 43, 0.05); border-radius: 16px; padding: 20px; margin: 20px 0; border: 1px solid var(--border); position: relative; z-index: 1;">
+            <p style="margin: 0 0 10px; font-weight: 700; font-size: 14px; color: var(--ink);">Détails de l'activité :</p>
+            <ul style="list-style: none; padding: 0; margin: 0; font-size: 14px; color: var(--muted); line-height: 1.6;">
+                <li>• Énergie : <strong><?= number_format($calories); ?> kcal/h</strong></li>
+                <li>• Effort : <strong><?= esc(ucfirst($intensity)); ?></strong></li>
+            </ul>
+        </div>
 
-                    <form method="post" action="/activities/<?= $activityId; ?>/destroy" class="d-inline">
-                        <?= csrf_field(); ?>
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <a href="/activities" class="btn btn-secondary">Annuler</a>
-                            <button type="submit" class="btn btn-danger">Supprimer définitivement</button>
-                        </div>
-                    </form>
-                </div>
+        <p style="color: #e74c3c; font-size: 13px; margin-bottom: 24px; font-weight: 500; position: relative; z-index: 1;">
+            ⚠️ Attention : Cette action est irréversible.
+        </p>
+
+        <form method="post" action="/activities/<?= $activityId; ?>/destroy" class="form">
+            <?= csrf_field(); ?>
+            <div class="form-actions">
+                <a href="/activities" class="button button--ghost" style="text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center;">
+                    Annuler
+                </a>
+                <button type="submit" class="button" style="background: linear-gradient(120deg, #e74c3c, #c0392b);">
+                    Supprimer
+                </button>
             </div>
+        </form>
+
+        <div class="form-footer">
+            <p style="font-size: 12px; color: var(--muted);">ID de l'activité : #<?= $activityId ?></p>
         </div>
     </div>
 </div>
-
 <?php echo $this->endSection(); ?>

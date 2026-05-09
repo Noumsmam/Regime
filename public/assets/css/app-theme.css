@@ -1,205 +1,114 @@
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Literata:opsz,wght@7..72,500;7..72,600&display=swap");
-
+/* --- BASE & LAYOUT FIX --- */
 :root {
-	color-scheme: light;
-	--bg-1: #f6f3ec;
-	--bg-2: #f3e7d3;
-	--ink: #1e1b16;
-	--muted: #6a5f52;
-	--card: #fff8ef;
-	--border: rgba(30, 27, 22, 0.12);
-	--accent: #d97c2b;
-	--accent-strong: #b76017;
-	--shadow: 0 20px 60px rgba(30, 27, 22, 0.15);
+    --bg-1: #f6f3ec;
+    --bg-2: #f3e7d3;
+    --ink: #1e1b16;
+    --muted: #6a5f52;
+    --card: #fff8ef;
+    --border: rgba(30, 27, 22, 0.12);
+    --accent: #d97c2b;
+    --accent-strong: #b76017;
+    --shadow: 0 20px 60px rgba(30, 27, 22, 0.15);
 }
 
-* {
-	box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
-body {
-	margin: 0;
-	min-height: 100vh;
-	font-family: "Space Grotesk", "Segoe UI", sans-serif;
-	color: var(--ink);
-	background: radial-gradient(circle at 20% 20%, rgba(217, 124, 43, 0.18), transparent 55%),
-		radial-gradient(circle at 80% 10%, rgba(70, 130, 120, 0.14), transparent 45%),
-		linear-gradient(120deg, var(--bg-1), var(--bg-2));
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	padding: 40px 16px;
-}
-
-.page {
-	width: min(960px, 100%);
-	display: grid;
-	place-items: center;
+/* Nouveau conteneur pour les pages hors-dashboard (Login/Register) */
+.auth-container {
+    min-height: calc(100vh - 100px); /* Ajuste selon ton footer */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px min(16px, 4%);
+    width: 100%;
 }
 
 .card {
-	width: min(520px, 100%);
-	background: var(--card);
-	border: 1px solid var(--border);
-	border-radius: 22px;
-	padding: 32px 28px 28px;
-	box-shadow: var(--shadow);
-	position: relative;
-	overflow: hidden;
-	animation: float-in 0.7s ease-out both;
+    width: 100%;
+    max-width: 480px; /* Largeur optimale pour un formulaire */
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 32px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+    animation: float-in 0.7s ease-out both;
 }
 
-.card::after {
-	content: "";
-	position: absolute;
-	inset: 0;
-	background: linear-gradient(130deg, rgba(217, 124, 43, 0.12), transparent 50%);
-	pointer-events: none;
-}
-
-.card__header {
-	position: relative;
-	z-index: 1;
-	margin-bottom: 18px;
-}
-
-.card__eyebrow {
-	margin: 0 0 8px;
-	text-transform: uppercase;
-	letter-spacing: 0.18em;
-	font-size: 12px;
-	color: var(--muted);
-}
-
-.card h1 {
-	margin: 0;
-	font-family: "Literata", serif;
-	font-size: 30px;
-	font-weight: 600;
-}
-
-.card__subtitle {
-	margin: 8px 0 0;
-	color: var(--muted);
-	line-height: 1.5;
-}
-
+/* --- FORMULAIRES FLUIDES --- */
 .form {
-	position: relative;
-	z-index: 1;
-	display: grid;
-	gap: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
 }
 
 .field {
-	display: grid;
-	gap: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
-.field label {
-	font-weight: 600;
-	font-size: 14px;
+.field input, .field select {
+    width: 100%; /* Force le remplissage horizontal */
+    max-width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: #fffdf8;
+    font-family: inherit;
+    font-size: 16px; /* Évite le zoom auto sur iPhone */
 }
 
-.field input,
-.field select {
-	width: 100%;
-	padding: 12px 14px;
-	border-radius: 12px;
-	border: 1px solid var(--border);
-	background: #fffdf8;
-	font-size: 15px;
-	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+/* Actions de formulaire (Boutons côte à côte) */
+.form-actions {
+    display: flex;
+    flex-wrap: wrap; /* Passe à la ligne si pas de place */
+    gap: 12px;
+    margin-top: 8px;
 }
 
-.field input:focus,
-.field select:focus {
-	outline: none;
-	border-color: var(--accent);
-	box-shadow: 0 0 0 3px rgba(217, 124, 43, 0.2);
+.form-actions .button {
+    flex: 1 1 180px; /* S'étire mais revient à la ligne à 180px */
 }
 
+/* --- BOUTONS --- */
 .button {
-	margin-top: 6px;
-	border: none;
-	border-radius: 14px;
-	padding: 12px 18px;
-	font-size: 16px;
-	font-weight: 600;
-	color: #fff;
-	background: linear-gradient(120deg, var(--accent), var(--accent-strong));
-	cursor: pointer;
-	transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    border: none;
+    border-radius: 14px;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    text-align: center;
+}
+
+.button--primary {
+    color: #fff;
+    background: linear-gradient(120deg, var(--accent), var(--accent-strong));
 }
 
 .button--ghost {
-	background: transparent;
-	color: var(--accent-strong);
-	border: 1px solid rgba(183, 96, 23, 0.35);
-	box-shadow: none;
+    background: transparent;
+    color: var(--accent-strong);
+    border: 1px solid rgba(183, 96, 23, 0.35);
 }
 
-.button--ghost:hover {
-	transform: translateY(-1px);
-	box-shadow: 0 10px 20px rgba(183, 96, 23, 0.15);
-}
-
-.button:hover {
-	transform: translateY(-1px);
-	box-shadow: 0 12px 24px rgba(217, 124, 43, 0.25);
-}
-
-.button:active {
-	transform: translateY(0);
-}
-
-.form-actions {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 12px;
-	margin-top: 4px;
-}
-
-@keyframes float-in {
-	from {
-		opacity: 0;
-		transform: translateY(16px) scale(0.98);
-	}
-	to {
-		opacity: 1;
-		transform: translateY(0) scale(1);
-	}
-}
-
-@media (max-width: 520px) {
-	.card {
-		padding: 26px 20px;
-	}
-
-	.card h1 {
-		font-size: 26px;
-	}
-
-	.form-actions {
-		grid-template-columns: 1fr;
-	}
-}
-
-.form-footer {
-	margin-top: 8px;
-	text-align: center;
-}
-
-.muted-link {
-	color: var(--muted);
-	text-decoration: none;
-	font-weight: 600;
-	background: linear-gradient(120deg, transparent 0%, transparent 50% , rgba(217,124,43,0.06) 100%);
-	padding: 6px 10px;
-	border-radius: 8px;
-}
-
-.muted-link:hover {
-	color: var(--accent-strong);
-	text-decoration: underline;
+/* --- RESPONSIVE --- */
+@media (max-width: 480px) {
+    .card {
+        padding: 24px 20px;
+        border-radius: 16px;
+    }
+    
+    .form-actions .button {
+        flex: 1 1 100%; /* Boutons pleine largeur sur mobile */
+    }
 }

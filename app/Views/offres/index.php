@@ -1,130 +1,136 @@
 <?php $this->extend('layout'); ?>
 
 <?php $this->section('content'); ?>
+<div class="layout">
+    <aside class="sidebar">
+        <div class="brand">
+            <a href="/" class="brand__mark" style="text-decoration:none;">FitLife</a>
+            <span class="brand__tag">v2.4</span>
+        </div>
 
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-8">
-            <h2>Mes Options Premium</h2>
+        <nav class="menu">
+            <a href="/dashboard" class="menu__item" style="text-decoration:none;">Tableau de bord</a>
+            <a href="/goals" class="menu__item" style="text-decoration:none;">Mes Objectifs</a>
+            <a href="/activities" class="menu__item" style="text-decoration:none;">Activités Sportives</a>
+            <a href="/regimes" class="menu__item" style="text-decoration:none;">Régimes & Menus</a>
+            <a href="/offres" class="menu__item" style="background: var(--accent); color: white; border: none; text-decoration:none;">Mes Options</a>
+            <a href="/wallet" class="menu__item" style="text-decoration:none;">Mon Portefeuille</a>
+            
+            <div class="menu__amount" style="margin-top: 20px;">
+                <span>Solde disponible</span>
+                <strong><?= number_format((float)($walletBalance ?? 0), 2, ',', ' ') ?>€</strong>
+                <a href="/wallet/deposit" style="font-size: 11px; color: var(--accent-strong); font-weight: 700; text-decoration: none; text-transform: uppercase; display:block; margin-top:5px;">+ Recharger</a>
+            </div>
+        </nav>
+    </aside>
 
-            <?php if (isset($error)): ?>
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <?= $error ?>
-                    <br><small>Les migrations doivent être appliquées : <code>php spark migrate</code></small>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            <?php endif; ?>
+    <main class="content">
+        <header class="topbar">
+            <div class="topbar__links">
+                <span class="topbar__link">Accueil / <strong>Mes Options Premium</strong></span>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <a href="/profile" class="button button--ghost" style="padding: 8px 15px; text-decoration:none;">Profil</a>
+                <a href="/logout" class="button button--ghost" style="padding: 8px 15px; border-color: #e74c3c; color: #e74c3c; text-decoration:none;">Déconnexion</a>
+            </div>
+        </header>
 
-            <?php if (session()->has('success')): ?>
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <?= session('success') ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            <?php endif; ?>
+        <?php if (isset($error) || session()->has('error')): ?>
+            <div style="padding: 15px; background: rgba(231, 76, 60, 0.1); color: #e74c3c; border-radius: 12px; border: 1px solid rgba(231, 76, 60, 0.2); margin-bottom: 20px; font-size: 14px;">
+                <strong>Erreur :</strong> <?= $error ?? session('error') ?>
+            </div>
+        <?php endif; ?>
 
-            <?php if (session()->has('error')): ?>
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <?= session('error') ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            <?php endif; ?>
+        <?php if (session()->has('success')): ?>
+            <div style="padding: 15px; background: rgba(46, 204, 113, 0.1); color: #27ae60; border-radius: 12px; border: 1px solid rgba(46, 204, 113, 0.2); margin-bottom: 20px; font-size: 14px;">
+                <strong>Succès :</strong> <?= session('success') ?>
+            </div>
+        <?php endif; ?>
 
-            <?php if (session()->has('info')): ?>
-                <div class="alert alert-info alert-dismissible fade show" role="alert">
-                    <?= session('info') ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            <?php endif; ?>
+        <?php if (session()->has('info')): ?>
+            <div style="padding: 15px; background: rgba(52, 152, 219, 0.1); color: #2980b9; border-radius: 12px; border: 1px solid rgba(52, 152, 219, 0.2); margin-bottom: 20px; font-size: 14px;">
+                <?= session('info') ?>
+            </div>
+        <?php endif; ?>
 
-            <!-- Offres actuelles -->
-            <?php if (!empty($userOffres)): ?>
-                <div class="mb-5">
-                    <h4>Options Actives</h4>
-                    <div class="list-group">
+        <section class="hero" style="margin-bottom: 30px;">
+            <div class="hero__card" style="border-left: 6px solid var(--accent-strong);">
+                <p class="card__eyebrow">Abonnements</p>
+                <h1>Options Actives</h1>
+                
+                <?php if (!empty($userOffres)): ?>
+                    <div style="display: grid; gap: 10px; margin-top: 20px;">
                         <?php foreach ($userOffres as $offre): ?>
-                            <div class="list-group-item">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1"><?= esc($offre['libelle']) ?></h5>
-                                    <span class="badge bg-success">✓ Actif</span>
-                                </div>
+                            <div style="background: white; padding: 15px 20px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border);">
+                                <span style="font-weight: 700;"><?= esc($offre['libelle']) ?></span>
+                                <span style="font-size: 12px; font-weight: 700; color: #27ae60;">ACTIF</span>
                             </div>
                         <?php endforeach; ?>
-                    </div>
-                </div>
-            <?php else: ?>
-                <div class="alert alert-info">
-                    Vous n'avez pas d'option active pour le moment.
-                </div>
-            <?php endif; ?>
-
-            <!-- Options à acheter -->
-            <div class="mb-5">
-                <h4>Options Disponibles</h4>
-                <?php if (empty($offres)): ?>
-                    <div class="alert alert-info">
-                        Aucune option disponible pour le moment.
                     </div>
                 <?php else: ?>
-                    <div class="row">
-                        <?php foreach ($offres as $offre): ?>
-                            <div class="col-md-6 mb-3">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h5 class="card-title"><?= esc($offre['libelle']) ?></h5>
-                                        
-                                        <p class="card-text">
-                                            <strong>Remise :</strong> <?= $offre['remise'] ?>%
-                                        </p>
-                                        
-                                        <?php if (in_array($offre['id'], $userOffreIds)): ?>
-                                            <button class="btn btn-success btn-sm" disabled>✓ Possédée</button>
-                                        <?php else: ?>
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <?php if (isset($offre['price']) && $offre['price'] !== null): ?>
-                                                    <span class="h5 mb-0 text-primary"><?= number_format((float)$offre['price'], 2, ',', ' ') ?>€</span>
-                                                    <form action="/offres/buy/<?= $offre['id'] ?>" method="POST" style="display:inline;">
-                                                        <?= csrf_field() ?>
-                                                        <button type="submit" class="btn btn-primary btn-sm">Acheter</button>
-                                                    </form>
-                                                <?php else: ?>
-                                                    <span class="text-muted">Gratuit</span>
-                                                    <button class="btn btn-secondary btn-sm" disabled>Non concédée</button>
-                                                <?php endif; ?>
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
+                    <p style="margin-top:15px; color: var(--muted);">Aucune option active pour le moment.</p>
                 <?php endif; ?>
             </div>
+        </section>
 
-            <!-- Info Gold -->
-            <div class="alert alert-info">
-                <h6>À propos de l'option Gold :</h6>
-                <ul class="mb-0">
-                    <li>Bénéficiez de <strong>15% de remise</strong> sur tous les régimes premium</li>
-                    <li>Accès illimité à toutes les recettes exclusives</li>
-                    <li>Support prioritaire 24/7</li>
-                    <li>Une seule fois : <strong><?= number_format(9.99, 2, ',', ' ') ?>€</strong></li>
-                </ul>
-            </div>
-        </div>
+        <h2 style="font-family: 'Literata', serif; font-size: 20px; margin: 30px 0 15px;">Offres de la boutique</h2>
+        
+        <?php if (empty($offres)): ?>
+            <div class="card"><p style="text-align:center; color:var(--muted);">Aucune option disponible.</p></div>
+        <?php else: ?>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 40px;">
+                <?php foreach ($offres as $offre): ?>
+                    <div class="chart-card" style="display: flex; flex-direction: column; justify-content: space-between; padding: 25px;">
+                        <div>
+                            <p class="card__eyebrow">Premium</p>
+                            <h3 style="margin: 5px 0 10px;"><?= esc($offre['libelle']) ?></h3>
+                            <p style="font-size: 14px; color: var(--muted); margin-bottom: 15px;">
+                                Remise permanente de <strong><?= $offre['remise'] ?>%</strong> sur vos achats.
+                            </p>
+                        </div>
 
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0">Portefeuille</h5>
+                        <div style="margin-top: auto; padding-top: 15px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between;">
+                            <?php if (in_array($offre['id'], $userOffreIds)): ?>
+                                <span style="font-weight: 700; color: var(--muted);">Déjà possédé</span>
+                                <button class="button button--ghost" disabled style="opacity: 0.5;">✓</button>
+                            <?php else: ?>
+                                <?php if (isset($offre['price']) && $offre['price'] !== null): ?>
+                                    <span style="font-size: 18px; font-weight: 800;"><?= number_format((float)$offre['price'], 2, ',', ' ') ?>€</span>
+                                    <form action="/offres/buy/<?= $offre['id'] ?>" method="POST">
+                                        <?= csrf_field() ?>
+                                        <button type="submit" class="button">Acheter</button>
+                                    </form>
+                                <?php else: ?>
+                                    <span style="color: var(--muted);">Gratuit</span>
+                                    <button class="button button--ghost" disabled>Indisponible</button>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+
+        <section class="gold">
+            <div class="gold__card">
+                <div>
+                    <h2>🌟 Avantages du compte Gold</h2>
+                    <ul style="list-style: none; padding: 0; margin: 15px 0 0; font-size: 14px; line-height: 1.6;">
+                        <li>• 15% de remise sur tous les régimes premium</li>
+                        <li>• Accès illimité aux recettes exclusives</li>
+                        <li>• Support prioritaire 24h/24</li>
+                    </ul>
                 </div>
-                <div class="card-body">
-                    <p class="text-muted">Solde disponible</p>
-                    <h3 class="text-success"><?= number_format((float)($walletBalance ?? 0), 2, ',', ' ') ?>€</h3>
-                    <a href="/wallet" class="btn btn-outline-primary btn-sm w-100 mt-3">Gérer mon portefeuille</a>
+                <div style="text-align: right;">
+                    <div style="font-size: 24px; font-weight: 800;"><?= number_format(9.99, 2, ',', ' ') ?>€</div>
+                    <div style="font-size: 12px; opacity: 0.8;">Paiement unique</div>
                 </div>
             </div>
-        </div>
-    </div>
+        </section>
+
+        <footer class="footer">
+            © 2026 FitLife — Plateforme de Gestion Santé
+        </footer>
+    </main>
 </div>
-
 <?php $this->endSection(); ?>

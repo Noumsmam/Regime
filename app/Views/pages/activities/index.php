@@ -7,7 +7,7 @@
             <h1 style="font-family: 'Literata', serif; font-size: 32px; margin: 0;">Activités Sportives</h1>
             <p style="color: var(--muted); margin: 6px 0 0;">Catalogue des exercices et dépenses caloriques.</p>
         </div>
-        <a href="/activities/create" class="button" style="text-decoration: none;">+ Ajouter une activité</a>
+        <a href="/goals/create" class="button" style="text-decoration: none;">+ Ajouter une activité</a>
     </div>
 
     <?php if (session()->getFlashdata('success')): ?>
