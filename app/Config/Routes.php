@@ -48,6 +48,15 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
     $routes->get('/activities/(:num)/delete', 'ActivitiesController::delete/$1');
     $routes->post('/activities/(:num)/destroy', 'ActivitiesController::destroy/$1');
 
+    // Parametres routes (CRUD)
+    $routes->get('/parametres', 'ParametresController::index');
+    $routes->get('/parametres/create', 'ParametresController::create');
+    $routes->post('/parametres/store', 'ParametresController::store');
+    $routes->get('/parametres/(:num)/edit', 'ParametresController::edit/$1');
+    $routes->post('/parametres/(:num)/update', 'ParametresController::update/$1');
+    $routes->get('/parametres/(:num)/delete', 'ParametresController::delete/$1');
+    $routes->post('/parametres/(:num)/destroy', 'ParametresController::destroy/$1');
+
     // Wallet / coupons routes
     $routes->get('/wallet', 'WalletController::index');
     $routes->post('/wallet/redeem', 'WalletController::redeemCoupon');

@@ -187,6 +187,14 @@
                             <strong>Prix :</strong>
                             <?php if (isset($goal['plan']['display_price']) && $goal['plan']['display_price'] !== null): ?>
                                 <span class="badge bg-primary"><?= number_format((float) $goal['plan']['display_price'], 2, ',', ' ') ?>€</span>
+                                <?php if (isset($goal['plan']['plan_duration_days'])): ?>
+                                    <small class="text-muted d-block mt-1">
+                                        Pour <?= (int) $goal['plan']['plan_duration_days'] ?> jours
+                                        <?php if (isset($goal['plan']['base_price_30_days']) && $goal['plan']['base_price_30_days'] !== null): ?>
+                                            (base 30 jours : <?= number_format((float) $goal['plan']['base_price_30_days'], 2, ',', ' ') ?>€)
+                                        <?php endif; ?>
+                                    </small>
+                                <?php endif; ?>
                             <?php else: ?>
                                 <span class="text-muted">Indisponible</span>
                             <?php endif; ?>
@@ -203,10 +211,18 @@
                                 <?php if (!empty($goal['plan']['purchased_at'])): ?>
                                     <br><small>Date d'achat : <?= date('d/m/Y à H:i', strtotime((string) $goal['plan']['purchased_at'])) ?></small>
                                 <?php endif; ?>
+                                <?php if (!empty($goal['plan']['purchased_duration_days'])): ?>
+                                    <br><small>Durée achetée : <?= (int) $goal['plan']['purchased_duration_days'] ?> jours</small>
+                                <?php endif; ?>
                             </div>
                         <?php elseif (isset($goal['plan']['display_price']) && $goal['plan']['display_price'] !== null): ?>
                             <form action="/regimes/<?= $goal['plan']['regime_id'] ?? 0 ?>/buy" method="POST">
                                 <?= csrf_field() ?>
+                                <input
+                                    type="hidden"
+                                    name="duration_days"
+                                    value="<?= (int) ($goal['plan']['plan_duration_days'] ?? ($goal['duration_days'] ?? 30)) ?>"
+                                >
                                 <button type="submit" class="btn btn-success w-100">
                                     Acheter ce régime recommandé
                                 </button>

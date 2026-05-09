@@ -9,6 +9,26 @@ use App\Services\DiscountService;
 
 class RegimesController extends BaseController
 {
+    private function normalizeDurationDays($duration): int
+    {
+        $days = is_numeric($duration) ? (int) $duration : 30;
+
+        if ($days < 7) {
+            return 7;
+        }
+
+        if ($days > 365) {
+            return 365;
+        }
+
+        return $days;
+    }
+
+    private function computeDurationPrice(float $basePrice, int $durationDays): float
+    {
+        return round($basePrice * ($durationDays / 30), 2);
+    }
+
     private function getDefaultRegimePrice(?string $name): ?float
     {
         $defaults = [
@@ -334,12 +354,17 @@ class RegimesController extends BaseController
             return redirect()->back()->with('error', 'Régime non trouvé.');
         }
 
+        $durationDays = $this->normalizeDurationDays($this->request->getPost('duration_days'));
+
         // Vérifier si le prix existe, avec prix par défaut pour les régimes connus
         $regimeName = isset($regime['name']) && is_string($regime['name']) ? $regime['name'] : null;
         $regime['price'] = $regime['price'] ?? $this->getDefaultRegimePrice($regimeName);
         if (!isset($regime['price']) || $regime['price'] === null) {
             return redirect()->back()->with('error', 'Ce régime n\'est pas disponible à l\'achat.');
         }
+
+        $basePrice = (float) $regime['price'];
+        $priceForDuration = $this->computeDurationPrice($basePrice, $durationDays);
 
         // Vérifier si l'utilisateur a déjà acheté ce régime
         if ($purchaseModel->hasPurchased($userId, $regimeId)) {
@@ -351,7 +376,7 @@ class RegimesController extends BaseController
 
         // Calculer le prix avec remise si l'utilisateur a une option Gold
         $discountPercentage = $discountService->getDiscountPercentage($userId);
-        $finalPrice = $discountService->applyDiscount((float)$regime['price'], $discountPercentage);
+        $finalPrice = round($discountService->applyDiscount($priceForDuration, $discountPercentage), 2);
 
         if ($wallet['balance'] < $finalPrice) {
             $needed = number_format($finalPrice, 2, ',', ' ');
@@ -374,6 +399,7 @@ class RegimesController extends BaseController
                 'regime_id' => $regimeId,
                 'price_paid' => $finalPrice,
                 'discount_applied' => $discountPercentage,
+                'duration_days' => $durationDays,
                 'purchased_at' => date('Y-m-d H:i:s')
             ]);
 
@@ -388,7 +414,7 @@ class RegimesController extends BaseController
             
             return redirect()->back()->with('success', 
                 'Régime "' . $regime['name'] . '" acheté avec succès ! ' . 
-                number_format($finalPrice, 2, ',', ' ') . '€ débité.' . $discountMsg);
+                number_format($finalPrice, 2, ',', ' ') . '€ débité pour ' . $durationDays . ' jours.' . $discountMsg);
 
         } catch (\Exception $e) {
             log_message('error', '[Regimes] Purchase error: ' . $e->getMessage());

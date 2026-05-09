@@ -19,6 +19,11 @@ class GoalService
     protected $userGoalsPlanModel;
     protected $userRegimePurchaseModel;
 
+    private function computeDurationPrice(float $basePrice, int $durationDays): float
+    {
+        return round($basePrice * ($durationDays / 30), 2);
+    }
+
     private function getDefaultRegimePrice(?string $name): ?float
     {
         $defaults = [
@@ -127,12 +132,19 @@ class GoalService
                 ? $goal['plan']['regime_name']
                 : null;
             $rawPrice = $goal['plan']['regime_price'] ?? null;
+            $durationDays = max(1, (int) ($goal['duration_days'] ?? 30));
 
             if ($rawPrice !== null && $rawPrice !== '') {
-                $goal['plan']['display_price'] = (float) $rawPrice;
+                $basePrice = (float) $rawPrice;
             } else {
-                $goal['plan']['display_price'] = $this->getDefaultRegimePrice($planName);
+                $basePrice = $this->getDefaultRegimePrice($planName);
             }
+
+            $goal['plan']['base_price_30_days'] = $basePrice;
+            $goal['plan']['plan_duration_days'] = $durationDays;
+            $goal['plan']['display_price'] = $basePrice !== null
+                ? $this->computeDurationPrice((float) $basePrice, $durationDays)
+                : null;
 
             $regimeId = (int) ($goal['plan']['regime_id'] ?? 0);
             $purchase = null;
@@ -146,6 +158,9 @@ class GoalService
             $goal['plan']['is_purchased'] = $purchase !== null;
             $goal['plan']['purchased_at'] = $purchase['purchased_at'] ?? null;
             $goal['plan']['purchased_price'] = isset($purchase['price_paid']) ? (float) $purchase['price_paid'] : null;
+            $goal['plan']['purchased_duration_days'] = isset($purchase['duration_days'])
+                ? (int) $purchase['duration_days']
+                : null;
         }
 
         // Expose exact daily calorie target for the goal (kg difference based).

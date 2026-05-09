@@ -6,11 +6,15 @@ use CodeIgniter\Model;
 
 class OptionModel extends Model
 {
-    // 4.1 Déclaration de la table et des champs autorisés
     protected $table            = 'options';
     protected $primaryKey       = 'id';
+    protected $returnType       = 'array';
+    protected $useSoftDeletes   = false;
+    protected $protectFields    = true;
 
-    protected $allowedFields    = [
-        'nom'
-    ];
+    protected $allowedFields    = ['nom', 'valeur', 'categorie', 'description', 'is_active'];
+
+    protected $useTimestamps = true;
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
 }

@@ -15,6 +15,7 @@ class UserRegimePurchaseModel extends Model
         'regime_id',
         'price_paid',
         'discount_applied',
+        'duration_days',
         'purchased_at',
         'created_at',
         'updated_at'

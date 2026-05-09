@@ -33,9 +33,10 @@
                     <h5 class="mb-3">🎁 Options Premium Actives</h5>
                     <div class="row">
                         <?php foreach ($userOptions as $option): ?>
+                            <?php $optionLibelle = (string) ($option['libelle'] ?? ''); ?>
                             <div class="col-md-4">
                                 <div class="badge bg-success" style="font-size: 1rem; padding: 0.75rem;">
-                                    <strong><?= esc($option['libelle']) ?></strong><br>
+                                    <strong><?= esc($optionLibelle) ?></strong><br>
                                     <?= $option['remise'] ?>% de remise 🏷️
                                 </div>
                             </div>
@@ -100,9 +101,24 @@
                             <td><?= substr(htmlspecialchars($regime['description']), 0, 50); ?>...</td>
                             <td>
                                 <?php if (!empty($regime['price'])): ?>
-                                    <strong><?= number_format((float)$regime['price'], 2, ',', ' ') ?>€</strong><br>
+                                    <?php $basePrice = (float) $regime['price']; ?>
+                                    <strong><?= number_format($basePrice, 2, ',', ' ') ?>€ / 30 jours</strong><br>
                                     <form action="/regimes/<?= $regime['id']; ?>/buy" method="POST" style="display:inline;">
                                         <?= csrf_field() ?>
+                                        <div style="margin:8px 0;">
+                                            <label for="duration_days_<?= $regime['id']; ?>" class="form-label" style="font-size:12px;">Durée (jours)</label>
+                                            <input
+                                                type="number"
+                                                class="form-control form-control-sm"
+                                                id="duration_days_<?= $regime['id']; ?>"
+                                                name="duration_days"
+                                                min="7"
+                                                max="365"
+                                                step="1"
+                                                value="30"
+                                                style="max-width:120px;"
+                                            >
+                                        </div>
                                         <button type="submit" class="btn btn-sm btn-success">Acheter</button>
                                     </form>
                                 <?php else: ?>
