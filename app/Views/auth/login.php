@@ -2,59 +2,60 @@
 
 <?php $this->section('content'); ?>
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-5">
-            <h2>Connexion</h2>
+<link rel="stylesheet" href="/assets/css/app-theme.css">
 
-            <?php if (session()->has('error')): ?>
-                <div class="alert alert-danger">
-                    <?= session('error') ?>
-                </div>
-            <?php endif; ?>
+<main class="page">
+    <section class="card">
+        <header class="card__header">
+            <p class="card__eyebrow">Régime</p>
+            <h1>Connexion</h1>
+            <p class="card__subtitle">Accédez à votre compte.</p>
+        </header>
 
-            <?php if (session()->has('success')): ?>
-                <div class="alert alert-success">
-                    <?= session('success') ?>
-                </div>
-            <?php endif; ?>
+        <?php if (session()->has('error')): ?>
+            <div style="color: #e74c3c; margin-bottom: 1rem; font-size: 0.9rem;">
+                <?= session('error') ?>
+            </div>
+        <?php endif; ?>
 
-            <?php if (session()->has('errors')): ?>
-                <div class="alert alert-danger">
-                    <ul>
-                        <?php foreach (session('errors') as $error): ?>
-                            <li><?= $error ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            <?php endif; ?>
+        <?php if (session()->has('success')): ?>
+            <div style="color: #27ae60; margin-bottom: 1rem; font-size: 0.9rem;">
+                <?= session('success') ?>
+            </div>
+        <?php endif; ?>
 
-            <form action="/login" method="POST">
-                <?= csrf_field() ?>
+        <?php if (session()->has('errors')): ?>
+            <div style="color: #e74c3c; margin-bottom: 1rem; font-size: 0.9rem;">
+                <ul style="padding-left: 1.5rem; margin: 0;">
+                    <?php foreach (session('errors') as $error): ?>
+                        <li><?= $error ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
 
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email*</label>
-                    <input type="email" class="form-control" id="email" name="email" 
-                           value="<?= old('email') ?>" required autofocus>
-                </div>
+        <form class="form" action="/login" method="POST">
+            <?= csrf_field() ?>
 
-                <div class="mb-3">
-                    <label for="password" class="form-label">Mot de passe *</label>
-                    <input type="password" class="form-control" id="password" name="password" required>
-                </div>
+            <div class="field">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="vous@email.com" value="<?= old('email') ?>" required autofocus />
+            </div>
 
-                <button type="submit" class="btn btn-primary w-100">
-                    Se connecter
-                </button>
-            </form>
+            <div class="field">
+                <label for="password">Mot de passe</label>
+                <input type="password" id="password" name="password" placeholder="••••••••" required />
+            </div>
 
-            <hr>
+            <button class="button" type="submit">Se connecter</button>
 
-            <p class="text-center">
-                Vous n'avez pas de compte ? <a href="/register">S'inscrire</a>
-            </p>
-        </div>
-    </div>
-</div>
+            <div class="form-footer">
+                <p class="muted-link">
+                    Vous n'avez pas de compte ? <a href="/register">S'inscrire</a>
+                </p>
+            </div>
+        </form>
+    </section>
+</main>
 
 <?php $this->endSection(); ?>

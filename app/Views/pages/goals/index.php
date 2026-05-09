@@ -2,136 +2,91 @@
 
 <?= $this->section('content') ?>
 
-<div class="container mt-5">
-    <div class="row mb-4">
-        <div class="col-md-8">
-            <h1>Mes Objectifs</h1>
+<div class="page">
+    <div style="width: 100%; max-width: 960px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1 style="font-family: 'Literata', serif; font-size: 32px; margin: 0;">Mes Objectifs</h1>
+            <p style="color: var(--muted); margin: 4px 0 0;">Suivez votre progression en temps réel.</p>
         </div>
-        <div class="col-md-4 text-end">
-            <a href="/goals/create" class="btn btn-primary">+ Créer un objectif</a>
-        </div>
+        <a href="/goals/create" class="button" style="text-decoration: none; display: inline-block;">+ Créer un objectif</a>
     </div>
 
     <?php if (session()->getFlashdata('success')): ?>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <?= session()->getFlashdata('success') ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    <?php endif; ?>
-
-    <?php if (session()->getFlashdata('error')): ?>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <?= session()->getFlashdata('error') ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <div style="width: 100%; padding: 14px; background: rgba(46, 204, 113, 0.1); color: #27ae60; border-radius: 12px; border: 1px solid rgba(46, 204, 113, 0.2); margin-bottom: 20px; font-weight: 600;">
+            ✔ <?= session()->getFlashdata('success') ?>
         </div>
     <?php endif; ?>
 
     <?php if (empty($goals)): ?>
-        <div class="alert alert-info">
-            Aucun objectif créé. <a href="/goals/create">Créer un objectif maintenant</a>.
+        <div class="card" style="width: 100%; text-align: center;">
+            <div class="card__header">
+                <p class="card__eyebrow">Aucune donnée</p>
+                <h1>Commencez l'aventure</h1>
+                <p class="card__subtitle">Vous n'avez pas encore défini d'objectifs santé.</p>
+            </div>
+            <a href="/goals/create" class="button" style="text-decoration: none; display: inline-block; margin-top: 10px;">Créer mon premier objectif</a>
         </div>
     <?php else: ?>
-        <div class="row">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; width: 100%;">
             <?php foreach ($goals as $goal): ?>
-                <div class="col-md-6 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                <?php
-                                    $typeLabel = [
-                                        'gain'         => 'Augmenter poids',
-                                        'lose'         => 'Réduire poids',
-                                        'reach_ideal'  => 'Atteindre IMC idéal'
-                                    ];
-                                    echo $typeLabel[$goal['type']] ?? ucfirst($goal['type']);
-                                ?>
-                            </h5>
-                            
-                            <div class="mb-2">
-                                <small class="text-muted">
-                                    <strong>Objectif :</strong> 
-                                    <?php
-                                        if ($goal['type'] === 'reach_ideal') {
-                                            echo 'IMC idéal (18.5 - 24.9)';
-                                        } else {
-                                            echo $goal['target_value'] . ' kg';
-                                        }
-                                    ?>
-                                </small>
-                            </div>
+                <div class="card" style="width: 100%; display: flex; flex-direction: column; animation-delay: <?= $loop_index ?? 0 * 0.1 ?>s;">
+                    <div class="card__header">
+                        <p class="card__eyebrow">
+                            <?php
+                                $statusLabel = ['pending' => 'En attente', 'active' => 'En cours', 'completed' => 'Terminé', 'cancelled' => 'Annulé'];
+                                echo $statusLabel[$goal['status']] ?? ucfirst($goal['status']);
+                            ?>
+                        </p>
+                        <h1 style="font-size: 24px;">
+                            <?php
+                                $typeLabel = ['gain' => 'Augmenter poids', 'lose' => 'Réduire poids', 'reach_ideal' => 'IMC idéal'];
+                                echo $typeLabel[$goal['type']] ?? ucfirst($goal['type']);
+                            ?>
+                        </h1>
+                    </div>
 
-                            <div class="mb-2">
-                                <small class="text-muted">
-                                    <strong>Durée :</strong> <?= $goal['duration_days'] ?> jours
-                                </small>
-                            </div>
-
-                            <div class="mb-3">
-                                <small class="text-muted">
-                                    <strong>Poids actuel :</strong> <?= number_format($goal['current_weight'], 2) ?> kg
-                                </small>
-                                <br/>
-                                <small class="text-muted">
-                                    <strong>IMC actuel :</strong> <?= number_format($goal['current_imc'], 2) ?>
-                                </small>
-                            </div>
-
-                            <!-- Progress bar -->
-                            <div class="mb-3">
-                                <div class="progress" style="height: 20px;">
-                                    <div class="progress-bar" role="progressbar" 
-                                         style="width: <?= $goal['progress'] ?>%;" 
-                                         aria-valuenow="<?= $goal['progress'] ?>" 
-                                         aria-valuemin="0" 
-                                         aria-valuemax="100">
-                                        <?= number_format($goal['progress'], 0) ?>%
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Status badge -->
-                            <div class="mb-3">
-                                <span class="badge 
-                                    <?php
-                                        $statusColor = [
-                                            'pending'   => 'bg-warning',
-                                            'active'    => 'bg-info',
-                                            'completed' => 'bg-success',
-                                            'cancelled' => 'bg-danger'
-                                        ];
-                                        echo $statusColor[$goal['status']] ?? 'bg-secondary';
-                                    ?>
-                                ">
-                                    <?php
-                                        $statusLabel = [
-                                            'pending'   => 'En attente',
-                                            'active'    => 'Actif',
-                                            'completed' => 'Complété',
-                                            'cancelled' => 'Annulé'
-                                        ];
-                                        echo $statusLabel[$goal['status']] ?? ucfirst($goal['status']);
-                                    ?>
-                                </span>
-                            </div>
-
-                            <!-- Actions -->
-                            <div>
-                                <?php if ($goal['status'] === 'pending'): ?>
-                                    <a href="/goals/<?= $goal['id'] ?>/activate" class="btn btn-sm btn-success">
-                                        Démarrer
-                                    </a>
-                                <?php endif; ?>
-
-                                <?php if ($goal['status'] === 'active'): ?>
-                                    <a href="/goals/<?= $goal['id'] ?>/complete" class="btn btn-sm btn-success">
-                                        Marquer complété
-                                    </a>
-                                    <a href="/goals/<?= $goal['id'] ?>/plan" class="btn btn-sm btn-info">
-                                        Voir mon plan
-                                    </a>
-                                <?php endif; ?>
-                            </div>
+                    <div style="display: grid; gap: 12px; margin-bottom: 24px; position: relative; z-index: 1;">
+                        <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border); padding-bottom: 8px;">
+                            <span style="color: var(--muted); font-size: 14px;">Cible</span>
+                            <strong style="font-weight: 600;">
+                                <?= ($goal['type'] === 'reach_ideal') ? '18.5 - 24.9 IMC' : $goal['target_value'] . ' kg' ?>
+                            </strong>
                         </div>
+                        <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border); padding-bottom: 8px;">
+                            <span style="color: var(--muted); font-size: 14px;">Durée</span>
+                            <strong style="font-weight: 600;"><?= $goal['duration_days'] ?> jours</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border); padding-bottom: 8px;">
+                            <span style="color: var(--muted); font-size: 14px;">Actuel</span>
+                            <strong style="font-weight: 600;"><?= number_format($goal['current_weight'], 1) ?> kg (<?= number_format($goal['current_imc'], 1) ?> IMC)</strong>
+                        </div>
+                    </div>
+
+                    <!-- Progress Section -->
+                    <div style="position: relative; z-index: 1; margin-bottom: 24px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--accent-strong);">
+                            <span>Progression</span>
+                            <span><?= number_format($goal['progress'], 0) ?>%</span>
+                        </div>
+                        <div style="width: 100%; background: var(--bg-2); height: 10px; border-radius: 20px; overflow: hidden;">
+                            <div style="width: <?= $goal['progress'] ?>%; background: linear-gradient(90deg, var(--accent), var(--accent-strong)); height: 100%; border-radius: 20px; transition: width 1s ease-out;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div style="position: relative; z-index: 1; margin-top: auto; display: flex; gap: 10px;">
+                        <?php if ($goal['status'] === 'pending'): ?>
+                            <a href="/goals/<?= $goal['id'] ?>/activate" class="button" style="flex: 1; text-align: center; text-decoration: none;">Démarrer</a>
+                        <?php endif; ?>
+
+                        <?php if ($goal['status'] === 'active'): ?>
+                            <a href="/goals/<?= $goal['id'] ?>/plan" class="button" style="flex: 1; text-align: center; text-decoration: none;">Plan</a>
+                            <a href="/goals/<?= $goal['id'] ?>/complete" class="button button--ghost" style="flex: 1; text-align: center; text-decoration: none;">Terminer</a>
+                        <?php endif; ?>
+                        
+                        <?php if ($goal['status'] === 'completed'): ?>
+                            <div style="text-align: center; width: 100%; color: #27ae60; font-weight: 700; padding: 10px; background: rgba(46, 204, 113, 0.1); border-radius: 10px;">🏆 Objectif Atteint</div>
+                        <?php endif; ?>
                     </div>
                 </div>
             <?php endforeach; ?>

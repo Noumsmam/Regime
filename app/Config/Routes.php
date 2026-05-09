@@ -7,7 +7,7 @@ use CodeIgniter\Router\RouteCollection;
  */
 
 // Routes publiques (pas besoin de login)
-$routes->get('/', 'Home::index');
+$routes->get('/', 'AuthController::loginForm');
 $routes->get('/register', 'AuthController::registerStep1');
 $routes->post('/register', 'AuthController::registerStep1Post');
 $routes->get('/register/step2', 'AuthController::registerStep2');

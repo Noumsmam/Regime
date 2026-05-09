@@ -2,54 +2,49 @@
 
 <?php $this->section('content'); ?>
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <h2>Inscription - Étape 2/2</h2>
-            <p class="text-muted">Vos informations de santé</p>
+<link rel="stylesheet" href="/assets/css/app-theme.css">
 
-            <?php if (session()->has('errors')): ?>
-                <div class="alert alert-danger">
-                    <ul>
-                        <?php foreach (session('errors') as $error): ?>
-                            <li><?= $error ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            <?php endif; ?>
+<main class="page">
+    <section class="card">
+        <header class="card__header">
+            <p class="card__eyebrow">Régime</p>
+            <h1>Inscription (suite)</h1>
+            <p class="card__subtitle">Complétez vos informations de santé.</p>
+        </header>
 
-            <form action="/register/step2" method="POST">
-                <?= csrf_field() ?>
+        <?php if (session()->has('errors')): ?>
+            <div style="color: #e74c3c; margin-bottom: 1rem; font-size: 0.9rem;">
+                <ul style="padding-left: 1.5rem; margin: 0;">
+                    <?php foreach (session('errors') as $error): ?>
+                        <li><?= $error ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
 
-                <div class="alert alert-info">
-                    <strong>Rappel :</strong> Ces informations sont utilisées pour calculer votre IMC 
-                    et vous proposer les régimes adaptés.
-                </div>
+        <form class="form" action="/register/step2" method="POST">
+            <?= csrf_field() ?>
 
-                <div class="mb-3">
-                    <label for="taille" class="form-label">Taille (cm) *</label>
-                    <input type="number" class="form-control" id="taille" name="taille" 
-                           step="0.01" min="0" value="<?= old('taille') ?>" required>
-                    <small class="form-text text-muted">Exemple: 170</small>
-                </div>
+            <div class="field">
+                <label for="taille">Taille (cm)</label>
+                <input type="number" id="taille" name="taille" placeholder="Ex: 170" step="0.01" min="0" value="<?= old('taille') ?>" required />
+            </div>
 
-                <div class="mb-3">
-                    <label for="poids" class="form-label">Poids (kg) *</label>
-                    <input type="number" class="form-control" id="poids" name="poids" 
-                           step="0.01" min="0" value="<?= old('poids') ?>" required>
-                    <small class="form-text text-muted">Exemple: 75</small>
-                </div>
+            <div class="field">
+                <label for="poids">Poids (kg)</label>
+                <input type="number" id="poids" name="poids" placeholder="Ex: 75" step="0.01" min="0" value="<?= old('poids') ?>" required />
+            </div>
 
-                <button type="submit" class="btn btn-success w-100">
-                    Finaliser l'inscription
-                </button>
-            </form>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <a class="button" href="/register" style="background: #ccc; text-decoration: none; display: flex; align-items: center; justify-content: center; flex: 1;">Retour</a>
+                <button class="button" type="submit" style="flex: 2;">Finaliser l'inscription</button>
+            </div>
 
-            <p class="text-center mt-3">
-                <a href="/register">Retour à l'étape 1</a>
-            </p>
-        </div>
-    </div>
-</div>
+            <div class="form-footer">
+                <a class="muted-link" href="/login">J'ai déjà un compte</a>
+            </div>
+        </form>
+    </section>
+</main>
 
 <?php $this->endSection(); ?>

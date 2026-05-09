@@ -1,231 +1,133 @@
 <?= $this->extend('layout') ?>
 
 <?= $this->section('content') ?>
-<div class="page-header">
-  <div>
-    <h2>Tableau de bord</h2>
-    <div class="breadcrumb">Accueil / <span>Tableau de bord</span></div>
-  </div>
-  <button class="btn btn-primary btn-sm">
-    <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-    Exporter
-  </button>
-</div>
-
-<?php if (!empty($user)): ?>
-<div class="card" style="margin-bottom: 20px; border-left: 4px solid <?= esc($imcStatus['color'] ?? 'gray') ?>;">
-  <div class="card-header">
-    <div class="card-title">Mon IMC</div>
-  </div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;align-items:center;">
-    <div>
-      <div style="font-size:12px;color:var(--c-muted);margin-bottom:6px;">Utilisateur</div>
-      <div style="font-weight:700;"><?= esc($user['username'] ?? $user['nom'] ?? 'Utilisateur') ?></div>
-    </div>
-    <div>
-      <div style="font-size:12px;color:var(--c-muted);margin-bottom:6px;">Portefeuille</div>
-      <div style="font-weight:700;font-size:20px;color:#0a7d38;"><?= number_format((float)($walletBalance ?? 0), 2, ',', ' ') ?>€</div>
-    </div>
-    <div>
-      <div style="font-size:12px;color:var(--c-muted);margin-bottom:6px;">IMC</div>
-      <div style="font-weight:700;font-size:22px;"><?= number_format((float)($imc ?? 0), 2, ',', ' ') ?></div>
-    </div>
-    <div>
-      <div style="font-size:12px;color:var(--c-muted);margin-bottom:6px;">Catégorie</div>
-      <div style="font-weight:700;"><?= esc($imcStatus['status'] ?? 'Unknown') ?></div>
-    </div>
-    <div>
-      <div style="font-size:12px;color:var(--c-muted);margin-bottom:6px;">Taille / Poids</div>
-      <div style="font-weight:700;"><?= esc($user['taille'] ?? 0) ?> cm / <?= esc($user['poids'] ?? 0) ?> kg</div>
-    </div>
-  </div>
-</div>
-<?php endif; ?>
-
-<div class="kpi-grid">
-
-  <div class="kpi-card">
-    <div class="kpi-header">
-      <div class="kpi-label">Utilisateurs actifs</div>
-      <div class="kpi-icon bg-blue">
-        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      </div>
-    </div>
-    <div class="kpi-value">1 284</div>
-    <div class="kpi-delta up">
-      <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" fill="none"><polyline points="18 15 12 9 6 15"/></svg>
-      +12.5% ce mois
-    </div>
-  </div>
-
-  <div class="kpi-card">
-    <div class="kpi-header">
-      <div class="kpi-label">Transactions</div>
-      <div class="kpi-icon bg-green">
-        <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-      </div>
-    </div>
-    <div class="kpi-value">8 430</div>
-    <div class="kpi-delta up">
-      <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" fill="none"><polyline points="18 15 12 9 6 15"/></svg>
-      +7.3% ce mois
-    </div>
-  </div>
-
-  <div class="kpi-card">
-    <div class="kpi-header">
-      <div class="kpi-label">Incidents ouverts</div>
-      <div class="kpi-icon bg-amber">
-        <svg viewBox="0 0 24 24"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-      </div>
-    </div>
-    <div class="kpi-value">37</div>
-    <div class="kpi-delta down">
-      <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" fill="none"><polyline points="6 9 12 15 18 9"/></svg>
-      -3 depuis hier
-    </div>
-  </div>
-
-  <div class="kpi-card">
-    <div class="kpi-header">
-      <div class="kpi-label">Disponibilite</div>
-      <div class="kpi-icon bg-green">
-        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-      </div>
-    </div>
-    <div class="kpi-value">99.8<span style="font-size:16px">%</span></div>
-    <div class="kpi-delta up">
-      <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" fill="none"><polyline points="18 15 12 9 6 15"/></svg>
-      SLA respecte
-    </div>
-  </div>
-
-</div>
-
-<div class="dash-grid">
-
-  <div class="card">
-    <div class="card-header">
-      <div class="card-title">Activite mensuelle</div>
-      <div style="display:flex;gap:12px;font-size:12px;color:var(--c-muted)">
-        <span style="display:flex;align-items:center;gap:5px">
-          <span style="width:10px;height:10px;background:var(--c-primary);border-radius:2px;display:inline-block"></span>
-          Creations
-        </span>
-        <span style="display:flex;align-items:center;gap:5px">
-          <span style="width:10px;height:10px;background:var(--c-accent);border-radius:2px;display:inline-block"></span>
-          Modifications
-        </span>
-      </div>
-    </div>
-    <div class="chart-area">
-      <div class="chart-bars">
-        <div class="chart-bar bar-primary" style="height:55%"></div><div class="chart-bar bar-accent" style="height:40%"></div>
-        <div class="chart-bar bar-primary" style="height:70%"></div><div class="chart-bar bar-accent" style="height:50%"></div>
-        <div class="chart-bar bar-primary" style="height:45%"></div><div class="chart-bar bar-accent" style="height:35%"></div>
-        <div class="chart-bar bar-primary" style="height:80%"></div><div class="chart-bar bar-accent" style="height:65%"></div>
-        <div class="chart-bar bar-primary" style="height:60%"></div><div class="chart-bar bar-accent" style="height:45%"></div>
-        <div class="chart-bar bar-primary" style="height:90%"></div><div class="chart-bar bar-accent" style="height:70%"></div>
-      </div>
-    </div>
-    <div class="chart-labels">
-      <span>Nov</span><span>Dec</span><span>Jan</span><span>Fev</span><span>Mar</span><span>Avr</span>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header">
-      <div class="card-title">Activite recente</div>
-      <button class="btn btn-ghost btn-sm">Voir tout</button>
-    </div>
-    <div class="activity-list">
-      <div class="activity-item">
-        <div class="activity-dot" style="background:var(--c-success)"></div>
-        <div class="activity-body">
-          <div class="act-title">Nouvel utilisateur cree</div>
-          <div class="act-meta">rojo.r — il y a 3 min</div>
+<div class="layout">
+    <aside class="sidebar">
+        <div class="brand">
+            <a href="/" class="brand__mark">FitLife</a>
+            <span class="brand__tag">v2.4</span>
         </div>
-      </div>
-      <div class="activity-item">
-        <div class="activity-dot" style="background:var(--c-warning)"></div>
-        <div class="activity-body">
-          <div class="act-title">Incident #437 ouvert</div>
-          <div class="act-meta">Serveur DB lent — il y a 15 min</div>
+
+        <nav class="menu">
+            <a href="/dashboard" class="menu__item">Tableau de bord</a>
+            <a href="/goals" class="menu__item">Mes Objectifs</a>
+            <a href="/regimes" class="menu__item">Régimes</a>
+            
+            <div class="menu__amount">
+                <span>Mon Solde</span>
+                <strong><?= number_format((float)($walletBalance ?? 0), 2, ',', ' ') ?>€</strong>
+            </div>
+        </nav>
+    </aside>
+
+    <main class="content">
+        <header class="topbar">
+            <div class="topbar__links">
+                <span class="topbar__link">Accueil / <strong>Dashboard</strong></span>
+            </div>
+            <a href="/logout" class="button button--ghost">Se déconnecter</a>
+        </header>
+
+        <section class="hero">
+            <div class="hero__card" style="border-left: 6px solid <?= esc($imcStatus['color'] ?? 'var(--accent)') ?>;">
+                <h1>Bonjour, <?= esc($user['username'] ?? $user['nom'] ?? 'Utilisateur') ?></h1>
+                <p>Voici un récapitulatif de votre profil santé et de vos activités récentes.</p>
+                
+                <?php if (!empty($user)): ?>
+                <div class="dashboard-stats" style="padding: 0; margin-top: 20px;">
+                    <div class="stat-card">
+                        <span>IMC Actuel</span>
+                        <strong><?= number_format((float)($imc ?? 0), 2, ',', ' ') ?></strong>
+                    </div>
+                    <div class="stat-card">
+                        <span>Catégorie</span>
+                        <strong><?= esc($imcStatus['status'] ?? 'Inconnu') ?></strong>
+                    </div>
+                    <div class="stat-card">
+                        <span>Taille</span>
+                        <strong><?= esc($user['taille'] ?? 0) ?> cm</strong>
+                    </div>
+                    <div class="stat-card">
+                        <span>Poids</span>
+                        <strong><?= esc($user['poids'] ?? 0) ?> kg</strong>
+                    </div>
+                </div>
+                <?php endif; ?>
+
+                <div style="margin-top: 24px; display: flex; gap: 12px;">
+                    <a href="/goals" class="button">Nouveau Programme</a>
+                    <button class="button button--ghost">Exporter les données</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="feature">
+                <h3>Utilisateurs</h3>
+                <p>1 284 actifs</p>
+                <small style="color: #2ecc71;">+12.5% ce mois</small>
+            </div>
+            <div class="feature">
+                <h3>Transactions</h3>
+                <p>8 430 total</p>
+                <small style="color: #2ecc71;">+7.3% ce mois</small>
+            </div>
+            <div class="feature">
+                <h3>SLA</h3>
+                <p>99.8%</p>
+                <small style="color: #2ecc71;">Disponibilité OK</small>
+            </div>
+        </section>
+
+        <div class="dashboard-charts" style="padding: 0;">
+            <div class="chart-card">
+                <h3 class="chart-title">Activité mensuelle</h3>
+                <div style="height: 180px; display: flex; align-items: flex-end; gap: 8px; border-bottom: 1px solid var(--border);">
+                    <div style="flex: 1; background: var(--accent); height: 60%; border-radius: 4px 4px 0 0;"></div>
+                    <div style="flex: 1; background: var(--muted); height: 45%; border-radius: 4px 4px 0 0;"></div>
+                    <div style="flex: 1; background: var(--accent); height: 80%; border-radius: 4px 4px 0 0;"></div>
+                    <div style="flex: 1; background: var(--muted); height: 55%; border-radius: 4px 4px 0 0;"></div>
+                    <div style="flex: 1; background: var(--accent); height: 70%; border-radius: 4px 4px 0 0;"></div>
+                    <div style="flex: 1; background: var(--muted); height: 50%; border-radius: 4px 4px 0 0;"></div>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3 class="chart-title">Progression Objectifs</h3>
+                <div style="display: grid; gap: 16px;">
+                    <div>
+                        <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 4px;">
+                            <span>Perte de poids</span><strong>82%</strong>
+                        </div>
+                        <div style="width: 100%; background: var(--bg-2); height: 8px; border-radius: 10px;">
+                            <div style="width: 82%; background: var(--accent-strong); height: 100%; border-radius: 10px;"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 4px;">
+                            <span>Stabilisation</span><strong>67%</strong>
+                        </div>
+                        <div style="width: 100%; background: var(--bg-2); height: 8px; border-radius: 10px;">
+                            <div style="width: 67%; background: var(--accent); height: 100%; border-radius: 10px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="activity-item">
-        <div class="activity-dot" style="background:var(--c-primary)"></div>
-        <div class="activity-body">
-          <div class="act-title">Rapport mensuel genere</div>
-          <div class="act-meta">Avril 2026 — il y a 1 h</div>
-        </div>
-      </div>
-      <div class="activity-item">
-        <div class="activity-dot" style="background:var(--c-danger)"></div>
-        <div class="activity-body">
-          <div class="act-title">Echec de connexion (x5)</div>
-          <div class="act-meta">IP 192.168.1.42 — il y a 2 h</div>
-        </div>
-      </div>
-      <div class="activity-item">
-        <div class="activity-dot" style="background:var(--c-success)"></div>
-        <div class="activity-body">
-          <div class="act-title">Sauvegarde complete OK</div>
-          <div class="act-meta">Backup-2026-04-29 — il y a 4 h</div>
-        </div>
-      </div>
-    </div>
-  </div>
 
-</div>
+        <section class="gold">
+            <div class="gold__card">
+                <div>
+                    <h2>🌟 Option Gold</h2>
+                    <p>Bénéficiez de -15% sur tous les régimes FitLife.</p>
+                </div>
+                <a href="/gold" class="button">Devenir Membre Gold</a>
+            </div>
+        </section>
 
-<div class="dash-grid">
-
-  <div class="card">
-    <div class="card-header"><div class="card-title">Progression des modules</div></div>
-    <div class="progress-bar-wrap">
-      <div class="progress-label"><span>Module RH</span><span class="pct">82%</span></div>
-      <div class="progress-track"><div class="progress-fill" style="width:82%;background:var(--c-primary)"></div></div>
-    </div>
-    <div class="progress-bar-wrap">
-      <div class="progress-label"><span>Module Finance</span><span class="pct">67%</span></div>
-      <div class="progress-track"><div class="progress-fill" style="width:67%;background:var(--c-accent)"></div></div>
-    </div>
-    <div class="progress-bar-wrap">
-      <div class="progress-label"><span>Module Stock</span><span class="pct">91%</span></div>
-      <div class="progress-track"><div class="progress-fill" style="width:91%;background:var(--c-success)"></div></div>
-    </div>
-    <div class="progress-bar-wrap">
-      <div class="progress-label"><span>Module CRM</span><span class="pct">45%</span></div>
-      <div class="progress-track"><div class="progress-fill" style="width:45%;background:var(--c-warning)"></div></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header"><div class="card-title">Repartition des roles</div></div>
-    <div style="display:flex;flex-direction:column;gap:12px">
-      <div style="display:flex;align-items:center;justify-content:space-between;font-size:13px">
-        <span style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:50%;background:var(--c-primary);display:inline-block"></span>Administrateurs</span>
-        <strong>12</strong>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;font-size:13px">
-        <span style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:50%;background:var(--c-accent);display:inline-block"></span>Gestionnaires</span>
-        <strong>48</strong>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;font-size:13px">
-        <span style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:50%;background:var(--c-success);display:inline-block"></span>Operateurs</span>
-        <strong>312</strong>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;font-size:13px">
-        <span style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:50%;background:var(--c-warning);display:inline-block"></span>Auditeurs (lecture seule)</span>
-        <strong>89</strong>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;font-size:13px">
-        <span style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:50%;background:var(--c-danger);display:inline-block"></span>Comptes suspendus</span>
-        <strong>7</strong>
-      </div>
-    </div>
-  </div>
-
+        <footer class="footer">
+            © 2026 FitLife — Projet S4 — Gestion Santé & Bien-être
+        </footer>
+    </main>
 </div>
 <?= $this->endSection() ?>
