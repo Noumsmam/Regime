@@ -28,6 +28,7 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
     $routes->get('/goals/(:num)/activate', 'GoalsController::activate/$1');
     $routes->get('/goals/(:num)/complete', 'GoalsController::complete/$1');
     $routes->get('/goals/(:num)/plan', 'GoalsController::showPlan/$1');
+    $routes->get('/goals/(:num)/plan/pdf', 'GoalsController::exportPlanPdf/$1');
 
     // Regimes routes (CRUD)
     $routes->get('/regimes', 'RegimesController::index');

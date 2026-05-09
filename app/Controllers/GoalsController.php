@@ -226,4 +226,64 @@ class GoalsController extends BaseController
             return redirect()->to('/goals');
         }
     }
+
+    /**
+     * GET /goals/{id}/plan/pdf
+     * Export the goal plan as PDF
+     */
+    public function exportPlanPdf($goalId = null)
+    {
+        $userId = $this->currentUserId();
+        if (!$userId) {
+            return redirect()->to('/login');
+        }
+
+        if (!$goalId) {
+            session()->setFlashdata('error', 'Objectif non trouvé.');
+            return redirect()->to('/goals');
+        }
+
+        try {
+            $goalService = new \App\Services\GoalService();
+            $goalWithPlan = $goalService->getGoalWithPlan((int) $goalId, $userId);
+
+            if (!$goalWithPlan) {
+                session()->setFlashdata('error', 'Objectif non trouvé.');
+                return redirect()->to('/goals');
+            }
+
+            if (empty($goalWithPlan['plan'])) {
+                session()->setFlashdata('error', 'Aucun plan actif à exporter pour cet objectif.');
+                return redirect()->to('/goals/' . (int) $goalId . '/plan');
+            }
+
+            $html = view('pages/goals/plan_pdf', [
+                'goal' => $goalWithPlan,
+                'generatedAt' => date('d/m/Y H:i'),
+            ]);
+
+            $pdf = new \TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
+            $pdf->SetCreator('Regime App');
+            $pdf->SetAuthor('Regime');
+            $pdf->SetTitle('Plan regime - Objectif #' . (int) $goalId);
+            $pdf->setPrintHeader(false);
+            $pdf->setPrintFooter(false);
+            $pdf->SetMargins(12, 12, 12);
+            $pdf->SetAutoPageBreak(true, 12);
+            $pdf->AddPage();
+            $pdf->writeHTML($html, true, false, true, false, '');
+
+            $fileName = 'plan-regime-' . (int) $goalId . '-' . date('Ymd-His') . '.pdf';
+            $output = $pdf->Output($fileName, 'S');
+
+            return $this->response
+                ->setHeader('Content-Type', 'application/pdf')
+                ->setHeader('Content-Disposition', 'attachment; filename="' . $fileName . '"')
+                ->setBody($output);
+        } catch (\Throwable $e) {
+            log_message('error', '[Goals] PDF export error: ' . $e->getMessage());
+            session()->setFlashdata('error', 'Erreur lors de la génération du PDF.');
+            return redirect()->to('/goals/' . (int) $goalId . '/plan');
+        }
+    }
 }

@@ -331,6 +331,11 @@
     </div>
 
     <div class="mb-4">
+        <?php if (!empty($goal['plan'])): ?>
+            <a href="/goals/<?= (int) ($goal['id'] ?? 0) ?>/plan/pdf" class="btn btn-primary">
+                Exporter ce plan en PDF
+            </a>
+        <?php endif; ?>
         <a href="/goals" class="btn btn-secondary">Retour aux objectifs</a>
     </div>
 </div>
