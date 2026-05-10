@@ -20,7 +20,7 @@
             <div class="menu__amount">
                 <span>Solde disponible</span>
                 <strong><?= number_format((float)($walletBalance ?? 0), 2, ',', ' ') ?>€</strong>
-                <a href="/wallet/deposit" class="menu__recharge">+ Recharger</a>
+                <a href="/wallet" class="menu__recharge">+ Recharger</a>
             </div>
         </nav>
     </aside>

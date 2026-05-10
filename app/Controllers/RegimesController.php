@@ -332,7 +332,7 @@ class RegimesController extends BaseController
      * POST /regimes/{id}/buy
      * Buy a regime plan
      */
-    public function buyRegime($regimeId = null)
+    public function buyRegime($regimeId)
     {
         $userId = $this->currentUserId();
         if (!$userId) {

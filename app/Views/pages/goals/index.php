@@ -21,7 +21,7 @@
             <div class="menu__amount">
                 <span>Solde disponible</span>
                 <strong><?= number_format((float)($walletBalance ?? 0), 2, ',', ' ') ?>€</strong>
-                <a href="/wallet/deposit" class="menu__recharge">+ Recharger</a>
+                <a href="/wallet" class="menu__recharge">+ Recharger</a>
             </div>
         </nav>
     </aside>
@@ -102,7 +102,7 @@
                             <?php endif; ?>
 
                             <?php if ($goal['status'] === 'active'): ?>
-                                <a href="/goals/<?= $goal['id'] ?>/plan" class="button button--primary" style="flex: 1; text-align: center; font-size: 13px;">Voir le Plan</a>
+                               regimes <a href="/goals/<?= $goal['id'] ?>/plan" class="button button--primary" style="flex: 1; text-align: center; font-size: 13px;">Voir le Plan</a>
                                 <a href="/goals/<?= $goal['id'] ?>/complete" class="button button--ghost" style="flex: 1; text-align: center; font-size: 13px;">Terminer</a>
                             <?php endif; ?>
                             

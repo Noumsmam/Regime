@@ -38,7 +38,7 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
     $routes->post('/regimes/(:num)/update', 'RegimesController::update/$1');
     $routes->get('/regimes/(:num)/delete', 'RegimesController::delete/$1');
     $routes->post('/regimes/(:num)/destroy', 'RegimesController::destroy/$1');
-    $routes->post('/regimes/(:num)/buy', 'RegimesController::buyRegime/$1');
+    $routes->get('/regimes/(:num)/buy', 'RegimesController::buyRegime/$1');
 
     // Activities routes (CRUD)
     $routes->get('/activities', 'ActivitiesController::index');

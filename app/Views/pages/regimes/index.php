@@ -116,8 +116,9 @@
 
                         <!-- Admin Actions -->
                         <div style="display: flex; justify-content: center; gap: 15px; margin-top: 15px;">
-                            <a href="/regimes/<?= $regime['id']; ?>/edit" style="font-size: 12px; color: var(--muted); text-decoration: none; font-weight: 600;">Modifier</a>
-                            <a href="/regimes/<?= $regime['id']; ?>/delete" style="font-size: 12px; color: #e74c3c; text-decoration: none; font-weight: 600;">Supprimer</a>
+                            <a href="/regimes/<?php echo $regime['id']; ?>/edit" style="font-size: 12px; color: var(--muted); text-decoration: none; font-weight: 600;">Modifier</a>
+                            <a href="/regimes/<?php echo $regime['id']; ?>/delete" style="font-size: 12px; color: #e74c3c; text-decoration: none; font-weight: 600;">Supprimer</a>
+                            <a href="/regimes/<?php echo $regime['id']; ?>/buy" style="font-size: 12px; color: #3ce74d; text-decoration: none; font-weight: 600;">Acheter</a>
                         </div>
                     </div>
                 <?php endforeach; ?>
