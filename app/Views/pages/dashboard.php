@@ -20,7 +20,7 @@
             <div class="menu__amount">
                 <span>Solde disponible</span>
                 <strong><?= number_format((float)($walletBalance ?? 0), 2, ',', ' ') ?>€</strong>
-                <a href="/wallet/deposit" class="menu__recharge">+ Recharger</a>
+                <a href="/wallet/redeem" class="menu__recharge">+ Recharger</a>
             </div>
         </nav>
     </aside>
@@ -36,8 +36,8 @@
                     <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" style="margin-right:8px"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
                     Exporter
                 </a>
-                <a href="/profile" class="button button--ghost">Profil</a>
-                <a href="/logout" class="button button--ghost" style="border-color: #e74c3c; color: #e74c3c;">Déconnexion</a>
+                <a href="/utilisateurs" class="button button--ghost">Profil</a>
+                <a href="/deconnexion" class="button button--ghost" style="border-color: #e74c3c; color: #e74c3c;">Déconnexion</a>
             </div>
         </header>
 
