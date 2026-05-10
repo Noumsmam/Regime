@@ -1,112 +1,120 @@
-<?php echo $this->extend('layout'); ?>
-<?php echo $this->section('content'); ?>
+<?= $this->extend('layout') ?>
 
-<div class="layout">
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-        <div class="brand">
-            <a href="/" class="brand__mark">FitLife</a>
-            <span class="brand__tag">v2.4</span>
-        </div>
+<?= $this->section('content') ?>
 
-        <nav class="menu">
-            <a href="/dashboard" class="menu__item">Tableau de bord</a>
-            <a href="/goals" class="menu__item">Mes Objectifs</a>
-            <a href="/activities" class="menu__item active">Activités Sportives</a>
-            <a href="/regimes" class="menu__item">Régimes & Menus</a>
-            <a href="/offres" class="menu__item">Mes Options</a>
-            <a href="/wallet" class="menu__item">Mon Portefeuille</a>
-            
-            <div class="menu__amount">
-                <span>Solde disponible</span>
-                <strong><?= number_format((float)($walletBalance ?? 0), 2, ',', ' ') ?>€</strong>
-                <a href="/wallet/deposit" class="menu__recharge">+ Recharger</a>
-            </div>
-        </nav>
-    </aside>
-
-    <!-- MAIN CONTENT -->
-    <main class="content">
-        <header class="topbar">
-            <div>
-                <h1 style="font-family: 'Literata', serif; font-size: 28px; margin: 0;">Activités Sportives</h1>
-                <p style="color: var(--muted); font-size: 14px; margin-top: 4px;">Catalogue des exercices et dépenses caloriques.</p>
-            </div>
-            <a href="/activities/create" class="button button--primary">
-                <span style="margin-right: 8px;">+</span> Ajouter une activité
-            </a>
+<div class="auth-container">
+    <div class="card-auth">
+        <header style="margin-bottom: 30px;">
+            <p style="text-transform: uppercase; letter-spacing: 0.1em; font-size: 11px; font-weight: 700; color: var(--accent); margin-bottom: 8px;">Planification</p>
+            <h1 style="font-family: 'Literata', serif; font-size: 26px; margin-bottom: 8px;">Nouvel objectif</h1>
+            <p style="color: var(--muted); font-size: 14px;">Définissez vos cibles pour générer un programme sur mesure.</p>
         </header>
 
-        <!-- Message de succès -->
-        <?php if (session()->getFlashdata('success')): ?>
-            <div style="background: rgba(39, 174, 96, 0.08); border: 1px solid rgba(39, 174, 96, 0.2); padding: 15px; border-radius: 12px; color: #27ae60; font-size: 14px; font-weight: 600; margin-bottom: 20px;">
-                ✅ <?= session()->getFlashdata('success'); ?>
+        <!-- Notification d'erreur -->
+        <?php if (session()->getFlashdata('error')): ?>
+            <div style="background: rgba(231, 76, 60, 0.08); border: 1px solid rgba(231, 76, 60, 0.2); padding: 15px; border-radius: 12px; color: #e74c3c; font-size: 13px; font-weight: 600; margin-bottom: 20px;">
+                ⚠️ <?= session()->getFlashdata('error') ?>
             </div>
         <?php endif; ?>
 
-        <?php if (empty($activities)): ?>
-            <section class="hero__card" style="text-align: center; padding: 60px 20px;">
-                <h2 style="font-family: 'Literata', serif; margin-bottom: 10px;">Aucune activité</h2>
-                <p style="color: var(--muted); margin-bottom: 25px;">Votre catalogue est actuellement vide.</p>
-                <a href="/activities/create" class="button button--primary">Créer la première activité</a>
-            </section>
-        <?php else: ?>
-            <div style="display: grid; gap: 12px;">
-                <?php foreach ($activities as $activity): ?>
-                    <?php
-                        $intensity = (string) ($activity['intensity'] ?? 'medium');
-                        $intensityColor = [
-                            'low' => '#2ecc71',
-                            'medium' => 'var(--accent)',
-                            'high' => '#e74c3c',
-                        ];
-                        $intensityLabel = [
-                            'low' => 'Faible',
-                            'medium' => 'Moyenne',
-                            'high' => 'Élevée',
-                        ];
-                        $currentColor = $intensityColor[$intensity] ?? 'var(--muted)';
-                    ?>
-                    <!-- Utilisation de la classe .feature pour un effet de ligne propre -->
-                    <div class="feature" style="display: flex; flex-direction: row; align-items: center; justify-content: space-between; padding: 18px 24px; cursor: default;">
-                        
-                        <div style="display: flex; align-items: center; gap: 20px; flex: 1;">
-                            <!-- Indicateur visuel -->
-                            <div style="width: 4px; height: 40px; background: <?= $currentColor ?>; border-radius: 4px; box-shadow: 0 0 10px <?= $currentColor ?>44;"></div>
-                            
-                            <div>
-                                <h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700; color: var(--ink);">
-                                    <?= esc($activity['name'] ?? ''); ?>
-                                </h3>
-                                <div style="display: flex; align-items: center; gap: 12px; margin-top: 2px;">
-                                    <span style="font-size: 13px; color: var(--muted);">
-                                        🔥 <strong><?= number_format((int)($activity['calories_burn_per_hour'] ?? 0)); ?></strong> kcal/h
-                                    </span>
-                                    <span style="font-size: 11px; color: <?= $currentColor ?>; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">
-                                        • <?= $intensityLabel[$intensity] ?? $intensity ?>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
+        <form action="/goals/store" method="POST" class="form">
+            <?= csrf_field() ?>
 
-                        <!-- Actions groupées -->
-                        <div style="display: flex; gap: 8px;">
-                            <a href="/activities/<?= $activity['id']; ?>/edit" class="button button--ghost" style="padding: 8px 14px; font-size: 12px;">
-                                Modifier
-                            </a>
-                            <a href="/activities/<?= $activity['id']; ?>/delete" class="button" style="padding: 8px 14px; font-size: 12px; background: rgba(231, 76, 60, 0.1); color: #e74c3c; border: 1px solid rgba(231, 76, 60, 0.2);">
-                                Supprimer
-                            </a>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
+            <div class="field">
+                <label for="type">Type d'objectif *</label>
+                <select id="type" name="type" required onchange="updateTargetLabel()">
+                    <option value="" disabled selected>-- Choisir un type --</option>
+                    <option value="gain" <?= old('type') === 'gain' ? 'selected' : '' ?>>
+                        Augmenter mon poids
+                    </option>
+                    <option value="lose" <?= old('type') === 'lose' ? 'selected' : '' ?>>
+                        Réduire mon poids
+                    </option>
+                    <option value="reach_ideal" <?= old('type') === 'reach_ideal' ? 'selected' : '' ?>>
+                        Atteindre mon IMC idéal
+                    </option>
+                </select>
             </div>
-        <?php endif; ?>
 
-        <footer style="padding: 40px 0; text-align:center; color:var(--muted); font-size:12px; opacity: 0.7;">
-            © 2026 FitLife — Votre partenaire performance
-        </footer>
-    </main>
+            <div class="field">
+                <label for="target_value">
+                    <span id="targetLabel">Valeur cible</span> *
+                </label>
+                <input type="number" 
+                       step="0.1" 
+                       id="target_value" 
+                       name="target_value" 
+                       value="<?= old('target_value') ?>"
+                       required
+                       placeholder="Ex: 75.5">
+                <p id="targetHint" style="font-size: 11px; color: var(--muted); margin-top: 5px; font-style: italic;"></p>
+            </div>
+
+            <div class="field">
+                <label for="duration_days">Durée (jours) *</label>
+                <input type="number" 
+                       id="duration_days" 
+                       name="duration_days" 
+                       value="<?= old('duration_days') ?>"
+                       required
+                       placeholder="Ex: 30">
+                <p style="font-size: 11px; color: var(--muted); margin-top: 5px;">
+                    Minimum 1 jour. La durée sera calculée en semaines.
+                </p>
+            </div>
+
+            <div style="background: var(--bg-main); border: 1px solid var(--border); padding: 15px; border-radius: 12px; margin-bottom: 25px;">
+                <p style="margin: 0; font-size: 13px; color: var(--ink); line-height: 1.4;">
+                    <strong>Note :</strong> Une fois créé, un plan incluant un régime et une activité sportive vous sera suggéré automatiquement.
+                </p>
+            </div>
+
+            <div style="display: flex; gap: 12px;">
+                <a href="/goals" class="button button--ghost" style="flex: 1; text-align: center; text-decoration: none;">Annuler</a>
+                <button type="submit" class="button button--primary" style="flex: 2;">Créer l'objectif</button>
+            </div>
+        </form>
+
+        <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border); text-align: center;">
+            <p style="font-size: 11px; color: var(--muted); font-family: 'Space Grotesk', sans-serif; opacity: 0.8;">
+                FITLIFE GOAL ENGINE v2
+            </p>
+        </div>
+    </div>
 </div>
 
-<?php echo $this->endSection(); ?>
+<script>
+function updateTargetLabel() {
+    const typeSelect = document.getElementById('type');
+    const targetLabel = document.getElementById('targetLabel');
+    const targetHint = document.getElementById('targetHint');
+    const targetValue = document.getElementById('target_value');
+    const type = typeSelect.value;
+
+    switch(type) {
+        case 'gain':
+            targetLabel.textContent = 'Poids cible (kg)';
+            targetHint.textContent = 'Poids que vous souhaitez atteindre.';
+            targetValue.placeholder = 'Ex: 80';
+            break;
+        case 'lose':
+            targetLabel.textContent = 'Poids cible (kg)';
+            targetHint.textContent = 'Poids que vous souhaitez atteindre.';
+            targetValue.placeholder = 'Ex: 65';
+            break;
+        case 'reach_ideal':
+            targetLabel.textContent = 'IMC cible';
+            targetHint.textContent = 'IMC idéal (recommandé: 22).';
+            targetValue.placeholder = 'Ex: 22';
+            break;
+        default:
+            targetLabel.textContent = 'Valeur cible';
+            targetHint.textContent = '';
+            targetValue.placeholder = '';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', updateTargetLabel);
+</script>
+
+<?= $this->endSection() ?>

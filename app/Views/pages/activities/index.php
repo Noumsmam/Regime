@@ -74,7 +74,7 @@
                                 </h3>
                                 <div style="display: flex; align-items: center; gap: 12px; margin-top: 4px;">
                                     <span style="font-size: 13px; color: var(--muted);">
-                                        🔥 <strong><?= number_format((int)($activity['calories_burn_per_hour'] ?? 0)); ?></strong> kcal/h
+                                        🔥 <strong><?= number_format((int)($activity['calories_burn_per_hour'] ?? 0)); ?></strong> kcal/j
                                     </span>
                                     <span style="font-size: 11px; color: <?= $currentColor ?>; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">
                                         • <?= esc($intensity) ?>
