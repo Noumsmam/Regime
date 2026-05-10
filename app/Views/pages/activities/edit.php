@@ -1,13 +1,13 @@
 <?php echo $this->extend('layout'); ?>
 
 <?php echo $this->section('content'); ?>
-<div class="page">
-    <div class="card">
-        <div class="card__header">
-            <p class="card__eyebrow">Édition</p>
-            <h1>Modifier l'activité</h1>
-            <p class="card__subtitle">Mettez à jour les informations de l'exercice pour garantir la précision des calculs caloriques.</p>
-        </div>
+<div class="auth-container">
+    <div class="card-auth">
+        <header style="margin-bottom: 30px;">
+            <p style="text-transform: uppercase; letter-spacing: 0.1em; font-size: 11px; font-weight: 700; color: var(--accent); margin-bottom: 8px;">Administration</p>
+            <h1 style="font-family: 'Literata', serif; font-size: 26px; margin-bottom: 8px;">Modifier l'activité</h1>
+            <p style="color: var(--muted); font-size: 14px;">Mettez à jour les paramètres de l'exercice pour la base de données.</p>
+        </header>
 
         <?php 
             $activityName = (string) ($activity['name'] ?? '');
@@ -16,8 +16,9 @@
             $intensity = (string) ($activity['intensity'] ?? 'medium');
         ?>
 
+        <!-- Alerte d'erreur stylisée -->
         <?php if (session()->getFlashdata('error')): ?>
-            <div style="padding: 12px 16px; background: rgba(231, 76, 60, 0.1); color: #e74c3c; border-radius: 12px; border: 1px solid rgba(231, 76, 60, 0.2); margin-bottom: 20px; font-size: 14px; font-weight: 600; position: relative; z-index: 1;">
+            <div style="padding: 12px 16px; background: rgba(231, 76, 60, 0.08); color: #e74c3c; border-radius: 12px; border: 1px solid rgba(231, 76, 60, 0.2); margin-bottom: 20px; font-size: 13px; font-weight: 600;">
                 ⚠️ <?= session()->getFlashdata('error'); ?>
             </div>
         <?php endif; ?>
@@ -45,16 +46,21 @@
                 </select>
             </div>
 
-            <div class="form-actions">
-                <a href="/activities" class="button button--ghost" style="text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center;">
+            <!-- Actions alignées sur le design de l'étape d'inscription -->
+            <div style="display: flex; gap: 12px; margin-top: 10px;">
+                <a href="/activities" class="button button--ghost" style="flex: 1; text-align: center; text-decoration: none;">
                     Annuler
                 </a>
-                <button type="submit" class="button">Mettre à jour</button>
+                <button type="submit" class="button button--primary" style="flex: 2;">
+                    Enregistrer les modifications
+                </button>
             </div>
         </form>
 
-        <div class="form-footer">
-            <p style="font-size: 13px; color: var(--muted);">Modification de l'élément #<?= $activityId ?></p>
+        <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border); text-align: center;">
+            <p style="font-size: 11px; color: var(--muted); font-family: 'Space Grotesk', sans-serif; opacity: 0.8;">
+                ID_REF: #<?= $activityId ?>
+            </p>
         </div>
     </div>
 </div>

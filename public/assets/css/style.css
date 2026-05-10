@@ -32,7 +32,7 @@ body {
 }
 
 /* ==========================================================================
-   2. STRUCTURE DU LAYOUT (DASHBOARD)
+   2. STRUCTURE DU LAYOUT (Anti-débordement)
    ========================================================================== */
 .layout {
     display: flex;
@@ -56,7 +56,7 @@ body {
 
 .content {
     flex: 1;
-    min-width: 0; /* Empêche le débordement horizontal du flex-item */
+    min-width: 0;
     padding: 30px min(40px, 5%);
     display: flex;
     flex-direction: column;
@@ -64,28 +64,94 @@ body {
 }
 
 /* ==========================================================================
-   3. COMPOSANTS NAVIGATION & TOPBAR
+   3. COMPOSANTS NAVIGATION & SIDEBAR
    ========================================================================== */
-.brand { margin-bottom: 40px; }
+.brand { 
+    margin-bottom: 40px; 
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 .brand__mark { 
     font-family: "Literata", serif; 
     font-size: 24px; 
     font-weight: 700; 
     color: var(--accent-strong);
+    text-decoration: none;
+}
+.brand__tag {
+    font-size: 10px;
+    background: var(--bg-main);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--muted);
+    font-weight: 700;
 }
 
-.menu { display: flex; flex-direction: column; gap: 8px; }
+.menu { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 4px; 
+}
+
 .menu__item {
     padding: 12px 16px;
     border-radius: 12px;
     text-decoration: none;
     color: var(--muted);
     font-weight: 600;
-    transition: 0.2s;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
 }
-.menu__item:hover { background: rgba(217, 124, 43, 0.08); color: var(--accent); }
-.menu__item.active { background: var(--accent); color: white; }
 
+.menu__item:hover { 
+    background: rgba(217, 124, 43, 0.08); 
+    color: var(--accent-strong); 
+}
+
+.menu__item.active { 
+    background: var(--accent); 
+    color: white !important; 
+    box-shadow: 0 4px 12px rgba(217, 124, 43, 0.2);
+}
+
+.menu__amount {
+    margin-top: 25px;
+    padding: 20px 16px;
+    background: var(--bg-main);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+}
+
+.menu__amount span {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+}
+
+.menu__amount strong {
+    font-size: 18px;
+    color: var(--ink);
+    display: block;
+}
+
+.menu__recharge {
+    font-size: 11px;
+    color: var(--accent-strong);
+    font-weight: 800;
+    text-decoration: none;
+    text-transform: uppercase;
+    display: block;
+    margin-top: 8px;
+}
+
+/* ==========================================================================
+   4. COMPOSANTS DASHBOARD & CARDS
+   ========================================================================== */
 .topbar {
     display: flex;
     justify-content: space-between;
@@ -94,9 +160,6 @@ body {
     gap: 15px;
 }
 
-/* ==========================================================================
-   4. COMPOSANTS DASHBOARD (CARDS & GRIDS)
-   ========================================================================== */
 .hero__card {
     background: var(--bg-card);
     border-radius: 24px;
@@ -104,6 +167,8 @@ body {
     border: 1px solid var(--border);
     box-shadow: var(--shadow);
     width: 100%;
+    position: relative;
+    overflow: hidden;
 }
 
 .dashboard-stats {
@@ -133,9 +198,14 @@ body {
     border: 1px solid var(--border);
     text-decoration: none;
     color: inherit;
-    transition: 0.3s;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.feature:hover { border-color: var(--accent); transform: translateY(-3px); }
+
+.feature:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow);
+}
 
 .dashboard-charts {
     display: grid;
@@ -151,7 +221,7 @@ body {
 }
 
 /* ==========================================================================
-   5. FORMULAIRES & PAGES D'AUTH (CONNEXION/INSCRIPTION)
+   5. AUTH & FORMULAIRES
    ========================================================================== */
 .auth-container {
     min-height: 100vh;
@@ -171,8 +241,8 @@ body {
     box-shadow: var(--shadow);
 }
 
-.form { display: flex; flex-direction: column; gap: 20px; }
-.field { display: flex; flex-direction: column; gap: 8px; }
+.form { display: flex; flex-direction: column; gap: 18px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
 .field label { font-weight: 600; font-size: 14px; }
 .field input, .field select {
     width: 100%;
@@ -180,12 +250,6 @@ body {
     border-radius: 12px;
     border: 1px solid var(--border);
     font-size: 16px;
-}
-
-.form-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
 }
 
 /* ==========================================================================
@@ -201,40 +265,26 @@ body {
     font-size: 14px;
     cursor: pointer;
     border: none;
-    transition: 0.2s;
+    transition: all 0.2s;
     text-decoration: none;
-    white-space: nowrap;
 }
 
-.button--primary { background: var(--accent); color: white; }
-.button--primary:hover { background: var(--accent-strong); }
-
-.button--ghost {
-    background: transparent;
-    border: 1.5px solid var(--border);
-    color: var(--ink);
-}
-.button--ghost:hover { background: rgba(0,0,0,0.03); }
+.button--primary { background: linear-gradient(120deg, var(--accent), var(--accent-strong)); color: white; }
+.button--ghost { background: transparent; border: 1.5px solid var(--border); color: var(--ink); }
+.button:hover { transform: translateY(-2px); filter: brightness(1.1); }
 
 /* ==========================================================================
-   7. RESPONSIVE DESIGN (FIX TOUT DÉBORDEMENT)
+   7. RESPONSIVE
    ========================================================================== */
 @media (max-width: 1024px) {
     .layout { flex-direction: column; }
-    .sidebar {
-        width: 100%;
-        height: auto;
-        position: relative;
-        border-right: none;
-        border-bottom: 1px solid var(--border);
-    }
+    .sidebar { width: 100%; height: auto; position: relative; border-right: none; border-bottom: 1px solid var(--border); }
     .menu { flex-direction: row; overflow-x: auto; padding-bottom: 10px; }
     .menu__item { white-space: nowrap; }
+    .menu__amount { margin-top: 0; margin-left: auto; padding: 10px 15px; }
 }
 
 @media (max-width: 600px) {
     .content { padding: 20px 15px; }
-    .topbar { flex-direction: column; align-items: flex-start; }
-    .topbar div { width: 100%; justify-content: flex-start !important; }
-    .button { width: 100%; } /* Boutons plein écran sur mobile */
+    .button { width: 100%; }
 }

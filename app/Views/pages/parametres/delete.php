@@ -1,41 +1,54 @@
 <?php echo $this->extend('layout'); ?>
 <?php echo $this->section('content'); ?>
 
-<div class="container mt-5">
-    <?php $parametre = $parametre ?? []; ?>
-    <?php
-        $parametreId = (int) ($parametre['id'] ?? 0);
-        $nom = (string) ($parametre['nom'] ?? '');
-        $valeur = (string) ($parametre['valeur'] ?? '');
-        $categorie = (string) ($parametre['categorie'] ?? '—');
-    ?>
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <div class="card border-danger">
-                <div class="card-header bg-danger text-white">
-                    <h5 class="mb-0">Confirmation de suppression</h5>
-                </div>
-                <div class="card-body">
-                    <p class="mb-3">
-                        Êtes-vous sûr de vouloir supprimer le paramètre <strong><?= esc($nom); ?></strong> ?
-                    </p>
-                    <div class="alert alert-warning">
-                        <p class="mb-0"><strong>Détails du paramètre :</strong></p>
-                        <ul class="mb-0 mt-2">
-                            <li>Valeur : <?= esc($valeur); ?></li>
-                            <li>Catégorie : <?= esc($categorie); ?></li>
-                        </ul>
-                    </div>
+<div class="auth-container">
+    <div class="card-auth" style="border-top: 6px solid #e74c3c;">
+        <header style="margin-bottom: 25px;">
+            <p style="text-transform: uppercase; letter-spacing: 0.1em; font-size: 11px; font-weight: 700; color: #e74c3c; margin-bottom: 8px;">Action Irréversible</p>
+            <h1 style="font-family: 'Literata', serif; font-size: 24px; margin-bottom: 8px;">Supprimer le paramètre</h1>
+            
+            <?php 
+                $parametreId = (int) ($parametre['id'] ?? 0);
+                $nom = (string) ($parametre['nom'] ?? '');
+                $valeur = (string) ($parametre['valeur'] ?? '');
+                $categorie = (string) ($parametre['categorie'] ?? '—');
+            ?>
 
-                    <form method="post" action="/parametres/<?= $parametreId; ?>/destroy" class="d-inline">
-                        <?= csrf_field(); ?>
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <a href="/parametres" class="btn btn-secondary">Annuler</a>
-                            <button type="submit" class="btn btn-danger">Supprimer définitivement</button>
-                        </div>
-                    </form>
-                </div>
+            <p style="color: var(--muted); font-size: 14px;">
+                Êtes-vous sûr de vouloir retirer <strong><?= esc($nom); ?></strong> de la configuration ?
+            </p>
+        </header>
+
+        <!-- Détails techniques dans un encadré discret -->
+        <div style="background: var(--bg-main); border-radius: 12px; padding: 16px; margin-bottom: 24px; border: 1px solid var(--border);">
+            <p style="margin: 0 0 8px; font-weight: 700; font-size: 13px; color: var(--ink); text-transform: uppercase; letter-spacing: 0.05em;">Récapitulatif</p>
+            <ul style="list-style: none; padding: 0; margin: 0; font-size: 14px; color: var(--muted); line-height: 1.6;">
+                <li>• Valeur actuelle : <strong style="color: var(--ink);"><?= esc($valeur); ?></strong></li>
+                <li>• Catégorie : <strong style="color: var(--ink);"><?= esc($categorie); ?></strong></li>
+            </ul>
+        </div>
+
+        <p style="color: #e74c3c; font-size: 13px; margin-bottom: 24px; font-weight: 600; text-align: center;">
+            ⚠️ Attention : La suppression peut impacter le comportement de l'application.
+        </p>
+
+        <form method="post" action="/parametres/<?= $parametreId; ?>/destroy" class="form">
+            <?= csrf_field(); ?>
+            
+            <div style="display: flex; gap: 12px;">
+                <a href="/parametres" class="button button--ghost" style="flex: 1; text-align: center; text-decoration: none;">
+                    Annuler
+                </a>
+                <button type="submit" class="button" style="flex: 1; background: linear-gradient(120deg, #e74c3c, #c0392b); color: white;">
+                    Confirmer la suppression
+                </button>
             </div>
+        </form>
+
+        <div style="margin-top: 25px; padding-top: 15px; border-top: 1px solid var(--border); text-align: center;">
+            <p style="font-size: 11px; color: var(--muted); font-family: 'Space Grotesk', sans-serif;">
+                PARAM_ID: #<?= $parametreId ?>
+            </p>
         </div>
     </div>
 </div>

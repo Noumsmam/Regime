@@ -1,97 +1,85 @@
 <?php echo $this->extend('layout'); ?>
 <?php echo $this->section('content'); ?>
 
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <h2>Créer un nouveau régime</h2>
-            <hr/>
+<div class="auth-container">
+    <div class="card-auth">
+        <header style="margin-bottom: 30px;">
+            <p style="text-transform: uppercase; letter-spacing: 0.1em; font-size: 11px; font-weight: 700; color: var(--accent); margin-bottom: 8px;">Nutrition</p>
+            <h1 style="font-family: 'Literata', serif; font-size: 26px; margin-bottom: 8px;">Nouveau régime</h1>
+            <p style="color: var(--muted); font-size: 14px;">Définissez les objectifs caloriques et la répartition des apports.</p>
+        </header>
 
-            <?php if (session()->getFlashdata('error')): ?>
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <?= session()->getFlashdata('error'); ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            <?php endif; ?>
+        <?php if (session()->getFlashdata('error')): ?>
+            <div style="padding: 12px 16px; background: rgba(231, 76, 60, 0.08); color: #e74c3c; border-radius: 12px; border: 1px solid rgba(231, 76, 60, 0.2); margin-bottom: 20px; font-size: 13px; font-weight: 600;">
+                ⚠️ <?= session()->getFlashdata('error'); ?>
+            </div>
+        <?php endif; ?>
 
-            <form method="post" action="/regimes/store">
-                <?= csrf_field(); ?>
+        <form method="post" action="/regimes/store" class="form">
+            <?= csrf_field(); ?>
 
-                <div class="mb-3">
-                    <label for="name" class="form-label">Nom du régime *</label>
-                    <input type="text" class="form-control" id="name" name="name" required 
-                           value="<?= old('name'); ?>">
-                </div>
+            <div class="field">
+                <label for="name">Nom du régime *</label>
+                <input type="text" id="name" name="name" required placeholder="Ex: Cétogène, Sportif..." value="<?= old('name'); ?>">
+            </div>
 
-                <div class="mb-3">
-                    <label for="calories_per_day" class="form-label">Calories par jour *</label>
-                    <input type="number" class="form-control" id="calories_per_day" name="calories_per_day" 
-                           min="500" max="5000" required value="<?= old('calories_per_day'); ?>">
-                </div>
-
-                <div class="mb-3">
-                    <label for="description" class="form-label">Description</label>
-                    <textarea class="form-control" id="description" name="description" rows="3"><?= old('description'); ?></textarea>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div class="field">
+                    <label for="calories_per_day">Calories / jour *</label>
+                    <input type="number" id="calories_per_day" name="calories_per_day" min="500" max="5000" required placeholder="Ex: 2200" value="<?= old('calories_per_day'); ?>">
                 </div>
 
-                <div class="mb-3">
-                    <label for="difficulty" class="form-label">Difficulté *</label>
-                    <select class="form-control" id="difficulty" name="difficulty" required>
-                        <option value="">-- Sélectionner --</option>
+                <div class="field">
+                    <label for="difficulty">Difficulté *</label>
+                    <select id="difficulty" name="difficulty" required>
+                        <option value="" disabled selected>-- Choisir --</option>
                         <option value="easy" <?= old('difficulty') === 'easy' ? 'selected' : ''; ?>>Facile</option>
                         <option value="medium" <?= old('difficulty') === 'medium' ? 'selected' : ''; ?>>Moyen</option>
                         <option value="hard" <?= old('difficulty') === 'hard' ? 'selected' : ''; ?>>Difficile</option>
                     </select>
                 </div>
+            </div>
 
-                <fieldset class="mb-4">
-                    <legend class="fs-5 mb-3">Composition du régime (%)</legend>
-                    <p class="text-muted small">La somme ne doit pas dépasser 100%</p>
+            <div class="field">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="3" placeholder="Détails du programme alimentaire..."><?= old('description'); ?></textarea>
+            </div>
 
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label for="pourcentage_viande" class="form-label">% Viande</label>
-                                <input type="number" class="form-control composition-input" id="pourcentage_viande" 
-                                       name="pourcentage_viande" min="0" max="100" step="0.1" 
-                                       value="<?= old('pourcentage_viande', 0); ?>">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label for="pourcentage_poisson" class="form-label">% Poisson</label>
-                                <input type="number" class="form-control composition-input" id="pourcentage_poisson" 
-                                       name="pourcentage_poisson" min="0" max="100" step="0.1" 
-                                       value="<?= old('pourcentage_poisson', 0); ?>">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label for="pourcentage_volaille" class="form-label">% Volaille</label>
-                                <input type="number" class="form-control composition-input" id="pourcentage_volaille" 
-                                       name="pourcentage_volaille" min="0" max="100" step="0.1" 
-                                       value="<?= old('pourcentage_volaille', 0); ?>">
-                            </div>
-                        </div>
+            <div style="margin: 20px 0; padding: 20px; background: var(--bg-main); border-radius: 16px; border: 1px solid var(--border);">
+                <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 700; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.05em;">
+                    Composition (%)
+                </h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+                    <div class="field" style="margin-bottom: 0;">
+                        <label style="font-size: 11px;">Viande</label>
+                        <input type="number" class="composition-input" id="pourcentage_viande" name="pourcentage_viande" min="0" max="100" step="0.1" value="<?= old('pourcentage_viande', 0); ?>">
                     </div>
-
-                    <div class="alert alert-info mt-2">
-                        <strong>Total :</strong> <span id="total-percentage">0</span>%
+                    <div class="field" style="margin-bottom: 0;">
+                        <label style="font-size: 11px;">Poisson</label>
+                        <input type="number" class="composition-input" id="pourcentage_poisson" name="pourcentage_poisson" min="0" max="100" step="0.1" value="<?= old('pourcentage_poisson', 0); ?>">
                     </div>
-                </fieldset>
-
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <a href="/regimes" class="btn btn-secondary">Annuler</a>
-                    <button type="submit" class="btn btn-primary">Créer le régime</button>
+                    <div class="field" style="margin-bottom: 0;">
+                        <label style="font-size: 11px;">Volaille</label>
+                        <input type="number" class="composition-input" id="pourcentage_volaille" name="pourcentage_volaille" min="0" max="100" step="0.1" value="<?= old('pourcentage_volaille', 0); ?>">
+                    </div>
                 </div>
-            </form>
-        </div>
+
+                <div id="total-container" style="margin-top: 15px; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 700; text-align: center; transition: all 0.3s ease;">
+                    Total : <span id="total-percentage">0</span>%
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 12px; margin-top: 10px;">
+                <a href="/regimes" class="button button--ghost" style="flex: 1; text-align: center; text-decoration: none;">Annuler</a>
+                <button type="submit" class="button button--primary" style="flex: 2;">Créer le régime</button>
+            </div>
+        </form>
     </div>
 </div>
 
 <script>
 document.querySelectorAll('.composition-input').forEach(input => {
-    input.addEventListener('change', updateTotal);
     input.addEventListener('input', updateTotal);
 });
 
@@ -102,19 +90,22 @@ function updateTotal() {
     const total = viande + poisson + volaille;
     
     const totalSpan = document.getElementById('total-percentage');
+    const container = document.getElementById('total-container');
+    
     totalSpan.textContent = total.toFixed(1);
     
-    // Change color if total > 100
     if (total > 100) {
-        totalSpan.parentElement.classList.add('bg-danger', 'text-white');
-        totalSpan.parentElement.classList.remove('alert-info');
+        container.style.background = 'rgba(231, 76, 60, 0.1)';
+        container.style.color = '#e74c3c';
+        container.style.border = '1px solid rgba(231, 76, 60, 0.2)';
     } else {
-        totalSpan.parentElement.classList.remove('bg-danger', 'text-white');
-        totalSpan.parentElement.classList.add('alert-info');
+        container.style.background = 'rgba(39, 174, 96, 0.1)';
+        container.style.color = '#27ae60';
+        container.style.border = '1px solid rgba(39, 174, 96, 0.2)';
     }
 }
 
-// Initialize on load
+// Init
 updateTotal();
 </script>
 

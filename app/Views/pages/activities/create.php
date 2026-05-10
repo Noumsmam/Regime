@@ -1,16 +1,17 @@
 <?php echo $this->extend('layout'); ?>
 <?php echo $this->section('content'); ?>
 
-<div class="page">
-    <div class="card">
-        <div class="card__header">
-            <p class="card__eyebrow">Administration</p>
-            <h1>Nouvelle activité</h1>
-            <p class="card__subtitle">Ajoutez un nouvel exercice au catalogue pour permettre aux utilisateurs de calculer leurs dépenses caloriques.</p>
-        </div>
+<div class="auth-container"> <!-- Utilisation du container centré pour plus de focus -->
+    <div class="card-auth"> <!-- Style de carte unifié avec des ombres douces -->
+        <header style="margin-bottom: 30px;">
+            <p style="text-transform: uppercase; letter-spacing: 0.1em; font-size: 11px; font-weight: 700; color: var(--accent); margin-bottom: 8px;">Administration</p>
+            <h1 style="font-family: 'Literata', serif; font-size: 26px; margin-bottom: 8px;">Nouvelle activité</h1>
+            <p style="color: var(--muted); font-size: 14px;">Ajoutez un exercice au catalogue pour le calcul des calories.</p>
+        </header>
 
+        <!-- Notification d'erreur -->
         <?php if (session()->getFlashdata('error')): ?>
-            <div style="padding: 12px 16px; background: rgba(231, 76, 60, 0.1); color: #e74c3c; border-radius: 12px; border: 1px solid rgba(231, 76, 60, 0.2); margin-bottom: 20px; font-size: 14px; font-weight: 600;">
+            <div style="padding: 12px 16px; background: rgba(231, 76, 60, 0.08); color: #e74c3c; border-radius: 12px; border: 1px solid rgba(231, 76, 60, 0.2); margin-bottom: 20px; font-size: 13px; font-weight: 600;">
                 ⚠️ <?= session()->getFlashdata('error'); ?>
             </div>
         <?php endif; ?>
@@ -38,14 +39,17 @@
                 </select>
             </div>
 
-            <div class="form-actions">
-                <a href="/activities" class="button button--ghost" style="text-decoration: none; text-align: center;">Annuler</a>
-                <button type="submit" class="button">Créer l'activité</button>
+            <!-- Actions du formulaire alignées -->
+            <div style="display: flex; gap: 12px; margin-top: 20px;">
+                <a href="/activities" class="button button--ghost" style="flex: 1; text-align: center;">Annuler</a>
+                <button type="submit" class="button button--primary" style="flex: 2;">Créer l'activité</button>
             </div>
         </form>
 
-        <div class="form-footer">
-            <p style="font-size: 13px; color: var(--muted);">* Les champs marqués d'une astérisque sont obligatoires.</p>
+        <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border); text-align: center;">
+            <p style="font-size: 12px; color: var(--muted); font-style: italic;">
+                * Les champs marqués d'une astérisque sont obligatoires.
+            </p>
         </div>
     </div>
 </div>

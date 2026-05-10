@@ -1,20 +1,19 @@
-<?php $this->extend('layout'); ?>
+<?= $this->extend('layout') ?>
 
-<?php $this->section('content'); ?>
+<?= $this->section('content') ?>
 
-<link rel="stylesheet" href="/assets/css/app-theme.css">
-
-<main class="page">
-    <section class="card">
-        <header class="card__header">
-            <p class="card__eyebrow">Régime</p>
-            <h1>Inscription</h1>
-            <p class="card__subtitle">Créez votre compte en quelques secondes.</p>
+<main class="auth-container">
+    <section class="card-auth">
+        <header style="margin-bottom: 30px;">
+            <p style="text-transform: uppercase; letter-spacing: 0.1em; font-size: 11px; font-weight: 700; color: var(--accent); margin-bottom: 8px;">Rejoindre FitLife</p>
+            <h1 style="font-family: 'Literata', serif; font-size: 28px; margin-bottom: 8px;">Inscription</h1>
+            <p style="color: var(--muted); font-size: 14px;">Créez votre compte pour commencer votre transformation.</p>
         </header>
 
+        <!-- Gestion des erreurs stylisée -->
         <?php if (session()->has('errors')): ?>
-            <div style="color: #e74c3c; margin-bottom: 1rem; font-size: 0.9rem;">
-                <ul style="padding-left: 1.5rem; margin: 0;">
+            <div style="background: rgba(231, 76, 60, 0.08); border: 1px solid rgba(231, 76, 60, 0.2); padding: 15px; border-radius: 12px; margin-bottom: 20px;">
+                <ul style="padding-left: 20px; margin: 0; color: #e74c3c; font-size: 13px; font-weight: 600;">
                     <?php foreach (session('errors') as $error): ?>
                         <li><?= $error ?></li>
                     <?php endforeach; ?>
@@ -27,18 +26,18 @@
 
             <div class="field">
                 <label for="nom">Nom complet</label>
-                <input type="text" id="nom" name="nom" placeholder="Votre nom" value="<?= old('nom') ?>" required />
+                <input type="text" id="nom" name="nom" placeholder="Jean Dupont" value="<?= old('nom') ?>" required />
             </div>
 
             <div class="field">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="vous@email.com" value="<?= old('email') ?>" required />
+                <label for="email">Adresse Email</label>
+                <input type="email" id="email" name="email" placeholder="jean@exemple.com" value="<?= old('email') ?>" required />
             </div>
 
             <div class="field">
                 <label for="genre">Genre</label>
                 <select id="genre" name="genre" required>
-                    <option value="">-- Sélectionnez --</option>
+                    <option value="" disabled selected>-- Choisir --</option>
                     <option value="M" <?= old('genre') === 'M' ? 'selected' : '' ?>>Homme</option>
                     <option value="F" <?= old('genre') === 'F' ? 'selected' : '' ?>>Femme</option>
                     <option value="Autre" <?= old('genre') === 'Autre' ? 'selected' : '' ?>>Autre</option>
@@ -55,10 +54,14 @@
                 <input type="password" id="password_confirm" name="password_confirm" placeholder="••••••••" required />
             </div>
 
-            <button class="button" type="submit">Continuer vers l'étape 2</button>
+            <button class="button button--primary" type="submit" style="margin-top: 10px; width: 100%;">
+                Continuer vers l'étape 2
+            </button>
 
-            <div class="form-footer">
-                <a class="muted-link" href="/login">J'ai déjà un compte</a>
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="/login" style="text-decoration: none; color: var(--muted); font-size: 13px; font-weight: 600;">
+                    J'ai déjà un compte ? <span style="color: var(--accent-strong);">Se connecter</span>
+                </a>
             </div>
         </form>
     </section>

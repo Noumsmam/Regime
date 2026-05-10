@@ -2,21 +2,20 @@
 
 <?php $this->section('content'); ?>
 
-<link rel="stylesheet" href="/assets/css/app-theme.css">
-
-<main class="page">
-    <section class="card">
-        <header class="card__header">
-            <p class="card__eyebrow">Régime</p>
-            <h1>Inscription (suite)</h1>
-            <p class="card__subtitle">Complétez vos informations de santé.</p>
+<main class="auth-container">
+    <section class="card-auth">
+        <header style="margin-bottom: 30px;">
+            <p style="text-transform: uppercase; letter-spacing: 0.1em; font-size: 11px; font-weight: 700; color: var(--accent); margin-bottom: 8px;">Étape 2 sur 2</p>
+            <h1 style="font-family: 'Literata', serif; font-size: 28px; margin-bottom: 8px;">Détails de santé</h1>
+            <p style="color: var(--muted); font-size: 14px;">Ces informations nous permettent de calculer votre IMC.</p>
         </header>
 
+        <!-- Messages d'erreurs stylisés -->
         <?php if (session()->has('errors')): ?>
-            <div style="color: #e74c3c; margin-bottom: 1rem; font-size: 0.9rem;">
-                <ul style="padding-left: 1.5rem; margin: 0;">
+            <div style="background: rgba(231, 76, 60, 0.08); border: 1px solid rgba(231, 76, 60, 0.2); padding: 15px; border-radius: 12px; margin-bottom: 20px;">
+                <ul style="padding-left: 20px; margin: 0; color: #e74c3c; font-size: 13px; font-weight: 600; list-style-type: none;">
                     <?php foreach (session('errors') as $error): ?>
-                        <li><?= $error ?></li>
+                        <li>⚠️ <?= $error ?></li>
                     <?php endforeach; ?>
                 </ul>
             </div>
@@ -27,21 +26,24 @@
 
             <div class="field">
                 <label for="taille">Taille (cm)</label>
-                <input type="number" id="taille" name="taille" placeholder="Ex: 170" step="0.01" min="0" value="<?= old('taille') ?>" required />
+                <input type="number" id="taille" name="taille" placeholder="Ex: 175" step="1" min="50" max="250" value="<?= old('taille') ?>" required />
             </div>
 
-            <div class="field">
+            <div class="field" style="margin-bottom: 10px;">
                 <label for="poids">Poids (kg)</label>
-                <input type="number" id="poids" name="poids" placeholder="Ex: 75" step="0.01" min="0" value="<?= old('poids') ?>" required />
+                <input type="number" id="poids" name="poids" placeholder="Ex: 70" step="0.1" min="20" max="300" value="<?= old('poids') ?>" required />
             </div>
 
-            <div style="display: flex; gap: 10px; margin-top: 20px;">
-                <a class="button" href="/register" style="background: #ccc; text-decoration: none; display: flex; align-items: center; justify-content: center; flex: 1;">Retour</a>
-                <button class="button" type="submit" style="flex: 2;">Finaliser l'inscription</button>
+            <!-- Groupe de boutons alignés sur le design du bundle -->
+            <div style="display: flex; gap: 12px; margin-top: 10px;">
+                <a href="/register" class="button button--ghost" style="flex: 1; text-align: center;">Retour</a>
+                <button class="button button--primary" type="submit" style="flex: 2;">Finaliser l'inscription</button>
             </div>
 
-            <div class="form-footer">
-                <a class="muted-link" href="/login">J'ai déjà un compte</a>
+            <div style="text-align: center; margin-top: 25px; border-top: 1px solid var(--border); padding-top: 20px;">
+                <a href="/login" style="text-decoration: none; color: var(--muted); font-size: 13px; font-weight: 600;">
+                    Annuler et revenir à la <span style="color: var(--accent-strong);">connexion</span>
+                </a>
             </div>
         </form>
     </section>

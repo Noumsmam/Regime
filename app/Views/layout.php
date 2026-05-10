@@ -9,7 +9,6 @@ $useAppLayout = $useAppLayout ?? true;
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title><?= esc($title) ?></title>
   
-  <!-- <link rel="stylesheet" href="/assets/css/app-theme.css"> -->
   <link rel="stylesheet" href="/assets/css/style.css">
 
   <style>
@@ -79,9 +78,9 @@ $useAppLayout = $useAppLayout ?? true;
 
     <!-- Le footer est souvent déjà dans ton Dashboard, 
          on peut le mettre en conditionnel ou le laisser simple -->
-    <footer class="app-footer">
+    <!-- <footer class="app-footer">
       &copy; <?= date('Y') ?> FitLife — Tous droits réservés
-    </footer>
+    </footer> -->
 
   </div>
 <?php else: ?>
